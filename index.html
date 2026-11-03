@@ -53,14 +53,14 @@ label input{width:auto;margin:0}
   <p id="cmsg"></p></div>
  <div class="card"><h3 style="margin:0 0 8px;color:var(--gold2)">🏆 Points game</h3>
   <ul class="rules" style="list-style:disc"><li style="display:list-item;border:0;padding:0">Scan the QR at the door and check in.</li>
-  <li style="display:list-item;border:0;padding:0">Arrive by <b id="r2"></b> (party starts <span id="r1"></span>): <b class="pos">+50 points</b></li>
-  <li style="display:list-item;border:0;padding:0">After that, every 15 minutes late: <b class="neg">−10 points</b>. It can go below zero! 😬</li>
+  <li style="display:list-item;border:0;padding:0">Between <b data-o="0"></b> and <b data-o="30"></b> (or earlier): <b class="pos">20 points</b></li>
+  <li style="display:list-item;border:0;padding:0">Between <b data-o="30"></b> and <b data-o="60"></b>: <b class="pos">10 points</b></li>
+  <li style="display:list-item;border:0;padding:0"><b data-o="60"></b> onwards: <b class="neg">0 points</b> 😬</li>
   <li style="display:list-item;border:0;padding:0">Top scorer gets bragging rights! 😎</li></ul></div>
  <a class="btn" href="#checkin">I’m here! Check in</a>
  <div class="card" id="tc" hidden style="margin-top:14px"><h3 style="margin:0 0 6px;color:var(--gold2)">🧪 Lab test controls</h3>
   <p class="sub" style="margin:0 0 10px">Moves the party start so you can test. Also clears this phone’s check-in.</p>
-  <div class="g2"><button class="btn alt" data-m="2">Starts in 2 min</button><button class="btn alt" data-m="5">Starts in 5 min</button>
-  <button class="btn alt" data-m="-10">Started 10 min ago</button><button class="btn alt" data-m="-35">Started 35 min ago</button></div>
+  <div class="g2"><button class="btn alt" data-m="2">Starts in 2 min</button><button class="btn alt" data-m="-10">Started 10 min ago (20 pts)</button><button class="btn alt" data-m="-40">Started 40 min ago (10 pts)</button><button class="btn alt" data-m="-75">Started 75 min ago (0 pts)</button></div>
   <button class="btn alt" id="tcr">Reset to real party time</button></div>
 </section>
 
@@ -82,6 +82,10 @@ label input{width:auto;margin:0}
 <section id="v-board">
  <div class="card"><h3 style="margin:0 0 6px;color:var(--gold2)">Live leaderboard</h3><ol id="bd"></ol><p class="sub" id="bdMsg"></p>
   <button class="btn" id="bdRef">Refresh</button><a class="btn alt" id="bdWA" target="_blank" rel="noopener">Share on WhatsApp</a></div>
+ <details class="card" id="ht"><summary style="cursor:pointer;color:var(--gold2)">👑 Host tools: add a guest manually</summary>
+  <input id="hp" type="password" placeholder="Host PIN" autocomplete="off" style="margin-top:12px"><input id="hn" placeholder="Guest name" maxlength="30">
+  <input id="htm" type="time" aria-label="Arrival time (Singapore)"><p class="sub" style="margin:0 0 6px">Leave the time empty to use the time right now.</p>
+  <button class="btn" id="hAdd">Add guest</button><p class="sub" id="hMsg"></p></details>
 </section>
 </main>
 <script>//---------------------------------------------------------------------
@@ -2385,35 +2389,37 @@ var qrcode = function() {
 <script>
 const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0');
 const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-const SU0='https://script.google.com/macros/s/AKfycbwS33q9AA4MJ0meS9n6iIFnJIhLi54ffU1CL8p2Pw19J3u372D12SGHAsMOtXqu3u3GKA/exec',SU=/^https:\/\/script\.google\.com\//.test(SU0)?SU0:'',TB=false,qs=new URLSearchParams(location.search),TEST=TB||qs.has('test');
-const BASE=50,GRACE=15,STEP=15,DROP=10;
+const SU0='PASTE_YOUR_APPS_SCRIPT_URL_HERE',SU=/^https:\/\/script\.google\.com\//.test(SU0)?SU0:'',TB=false,qs=new URLSearchParams(location.search),TEST=TB||qs.has('test');
+const T1=20,T2=10,T3=0,M1=30,M2=60,K=TEST?'t_':'';
 const pe=v=>{if(!v)return 0;if(/^\d{1,2}:\d{2}$/.test(v))return Date.parse(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Singapore'}).format(new Date())+'T'+v.padStart(5,'0')+':00+08:00')||0;return Date.parse(/[zZ]|[+-]\d\d:?\d\d$/.test(v)?v:v+'+08:00')||0};
 const START0=pe(qs.get('start'))&&TEST?pe(qs.get('start')):Date.parse('2026-11-07T18:00:00+08:00');let START=START0;
-if(TEST){const o=ld('dg_start',0);if(o)START=o}
-let DEV=ld('dg_dev','');if(!DEV){DEV=Math.random().toString(36).slice(2,12);sv('dg_dev',DEV)}
+if(TEST){const o=ld(K+'dg_start',0);if(o)START=o}
+let DEV=ld(K+'dg_dev','');if(!DEV){DEV=Math.random().toString(36).slice(2,12);sv(K+'dg_dev',DEV)}
 const tm=ms=>new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'numeric',minute:'2-digit',hour12:true}).format(ms).toUpperCase();
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const pts=ms=>{const g=START+GRACE*6e4;return ms<=g?BASE:BASE-DROP*Math.ceil((ms-g)/(STEP*6e4))};
-const res=ms=>{const p=pts(ms),m=Math.floor((ms-START)/6e4);return ms<=START+GRACE*6e4?{p,txt:`You’re on time! +${p} points 🎉`}:{p,txt:`${m} min after start: ${p>0?'+':''}${p} points ${p>=0?'😅':'😬'}`}};
+const pts=ms=>ms<=START+M1*6e4?T1:ms<=START+M2*6e4?T2:T3;
+const res=ms=>{const p=pts(ms),m=Math.floor((ms-START)/6e4);return p===T1?{p,txt:`You’re on time! +${p} points 🎉`}:p===T2?{p,txt:`${m} min after start: +${p} points 😅`}:{p,txt:`${m} min after start: ${p} points 😬`}};
 async function api(o){const c=new AbortController(),t=setTimeout(()=>c.abort(),9000);try{const r=await fetch(SU+'?'+new URLSearchParams({...o,start:START,test:TEST?1:0}),{signal:c.signal});return await r.json()}finally{clearTimeout(t)}}
-function paint(){$('#r1').textContent=tm(START);$('#r2').textContent=tm(START+GRACE*6e4);if(TEST){$('#sub').textContent='🧪 Test mode · party starts '+tm(START);$('#tc').hidden=false}}
+function paint(){document.querySelectorAll('[data-o]').forEach(e=>e.textContent=tm(START+Number(e.dataset.o)*6e4));if(TEST){$('#sub').textContent='🧪 Test mode · party starts '+tm(START);$('#tc').hidden=false}}
 const ids=['countdown','checkin','qr','board'];let cur='countdown';
 function route(){const h=(location.hash||'#countdown').slice(1);cur=ids.includes(h)?h:'countdown';ids.forEach(i=>$('#v-'+i).classList.toggle('on',i===cur));document.querySelectorAll('nav a').forEach(a=>{if(a.getAttribute('href')==='#'+cur)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});if(cur==='qr')renderQR();if(cur==='board')loadBoard()}
 addEventListener('hashchange',route);
-function tick(){const n=Date.now(),d=START-n,g=START+GRACE*6e4;if(d>0){const s=Math.floor(d/1e3);$('#D').textContent=pad(Math.floor(s/86400));$('#Hr').textContent=pad(Math.floor(s%86400/3600));$('#M').textContent=pad(Math.floor(s%3600/60));$('#S').textContent=pad(s%60);$('#cmsg').textContent=d<3600e3?`Almost time! Be there by ${tm(g)} for +50 🚗💨`:`Arrive by ${tm(g)} to earn +50 points!`}else{['D','Hr','M','S'].forEach(i=>$('#'+i).textContent='00');$('#cmsg').textContent=n<=g?`The party has started! ${Math.ceil((g-n)/6e4)} min left to score the full +50 🏃`:'Late! Points drop 10 every 15 minutes 😈'}}
+function tick(){const n=Date.now(),d=START-n,g=START+M1*6e4,g2=START+M2*6e4;if(d>0){const s=Math.floor(d/1e3);$('#D').textContent=pad(Math.floor(s/86400));$('#Hr').textContent=pad(Math.floor(s%86400/3600));$('#M').textContent=pad(Math.floor(s%3600/60));$('#S').textContent=pad(s%60);$('#cmsg').textContent=d<3600e3?`Almost time! Arrive by ${tm(g)} for the full 20 points 🚗💨`:`Arrive by ${tm(g)} to earn the full 20 points!`}else{['D','Hr','M','S'].forEach(i=>$('#'+i).textContent='00');$('#cmsg').textContent=n<=g?`The party has started! ${Math.ceil((g-n)/6e4)} min left for the full 20 points 🏃`:n<=g2?`Hurry! After ${tm(g2)} it is 0 points 😈`:'Come anyway, the party is still on! 🪔'}}
 setInterval(tick,1000);
-function renderCI(){const c=ld('dg_ci',null);$('#ciForm').hidden=!!c;$('#ciRes').hidden=!c;if(c){const r=res(c.ts);$('#ciBig').textContent=r.p>=0?'🎉':'😅';$('#ciTxt').innerHTML=`<b>${esc(c.name)}</b> checked in at ${tm(c.ts)}<br>${r.txt}`;$('#ciNote').textContent=c.dup?'You were already checked in earlier.':c.warn?'Could not reach the sheet. Show this screen to the host.':'';$('#ciWA').href='https://wa.me/?text='+encodeURIComponent(`🪔 ${c.name} checked in at ${tm(c.ts)}! ${r.txt} #DegaveDiwali`)}}
+function renderCI(){const c=ld(K+'dg_ci',null);$('#ciForm').hidden=!!c;$('#ciRes').hidden=!c;if(c){const r=res(c.ts);$('#ciBig').textContent=r.p>=0?'🎉':'😅';$('#ciTxt').innerHTML=`<b>${esc(c.name)}</b> checked in at ${tm(c.ts)}<br>${r.txt}`;$('#ciNote').textContent=c.dup?'You were already checked in earlier.':c.warn?'Could not reach the sheet. Show this screen to the host.':'';$('#ciWA').href='https://wa.me/?text='+encodeURIComponent(`🪔 ${c.name} checked in at ${tm(c.ts)}! ${r.txt} #DegaveDiwali`)}}
 $('#nm').value=ld('dg_name','');
 $('#ciBtn').onclick=async()=>{const name=$('#nm').value.trim(),err=$('#ciErr');if(!name){err.textContent='Please type your name first 🙂';return}if(Date.now()<START-3600e3&&!TEST){err.textContent='Check-in opens one hour before the party. See you soon!';return}err.textContent='';const b=$('#ciBtn');b.disabled=true;b.textContent='Checking in…';let rec={name,ts:Date.now()};
  if(SU){try{const r=await api({action:'checkin',name,dev:DEV});if(!r.ok){err.textContent=r.err==='early'?'Check-in opens one hour before the party. See you soon!':'Something went wrong. Please try again.';b.disabled=false;b.textContent='Check in now';return}rec={name:r.name,ts:r.ts,dup:r.dup}}catch(e){rec.warn=1}}
- sv('dg_name',name);sv('dg_ci',rec);b.disabled=false;b.textContent='Check in now';renderCI()};
+ sv('dg_name',name);sv(K+'dg_ci',rec);b.disabled=false;b.textContent='Check in now';renderCI()};
 function renderQR(){const u=location.href.split('#')[0]+'#checkin',q=qrcode(0,'M');q.addData(u);q.make();$('#qrbox').innerHTML=q.createSvgTag({cellSize:4,margin:2,scalable:true});$('#qrurl').textContent=u;$('#clnote').hidden=!location.hostname.includes('claude')}
 $('#qrcp').onclick=async()=>{const b=$('#qrcp');try{await navigator.clipboard.writeText($('#qrurl').textContent);b.textContent='Copied ✅'}catch(e){b.textContent='Copy not allowed here'}setTimeout(()=>b.textContent='Copy link',2000)};
 const med=i=>['🥇','🥈','🥉'][i]||(i+1)+'.';let rows=[];
 function drawBoard(){$('#bd').innerHTML=rows.length?rows.map((e,i)=>`<li><span>${med(i)}</span><span class="n">${esc(e.name)}<small>${tm(e.ts)}</small></span><b class="${e.points<0?'neg':'pos'}">${e.points>0?'+':''}${e.points}</b></li>`).join(''):'<li class="mut">No check-ins yet</li>';$('#bdWA').href='https://wa.me/?text='+encodeURIComponent('🪔 Degave Diwali Leaderboard 🪔\n'+(rows.length?rows.map((e,i)=>`${med(i)} ${e.name}: ${e.points>0?'+':''}${e.points} (${tm(e.ts)})`).join('\n'):'No check-ins yet'))}
 async function loadBoard(){if(!SU){$('#bd').innerHTML='';$('#bdMsg').textContent='The live leaderboard appears once the Google Sheet is connected.';return}$('#bdMsg').textContent='';try{const r=await api({action:'board'});rows=r.rows||[];drawBoard()}catch(e){$('#bdMsg').textContent='Could not load the leaderboard. Tap Refresh.'}}
 $('#bdRef').onclick=loadBoard;setInterval(()=>{if(cur==='board')loadBoard()},20000);
-document.querySelectorAll('#tc [data-m]').forEach(b=>b.onclick=()=>{START=Date.now()+Number(b.dataset.m)*6e4;sv('dg_start',START);sv('dg_ci',null);DEV=Math.random().toString(36).slice(2,12);sv('dg_dev',DEV);paint();renderCI();tick()});
-$('#tcr').onclick=()=>{START=START0;sv('dg_start',0);sv('dg_ci',null);paint();renderCI();tick()};
+document.querySelectorAll('#tc [data-m]').forEach(b=>b.onclick=()=>{START=Date.now()+Number(b.dataset.m)*6e4;sv(K+'dg_start',START);sv(K+'dg_ci',null);DEV=Math.random().toString(36).slice(2,12);sv(K+'dg_dev',DEV);paint();renderCI();tick()});
+$('#tcr').onclick=()=>{START=START0;sv(K+'dg_start',0);sv(K+'dg_ci',null);paint();renderCI();tick()};
+$('#hp').value=ld('dg_pin','');
+$('#hAdd').onclick=async()=>{const name=$('#hn').value.trim(),pin=$('#hp').value.trim(),m=$('#hMsg');if(!SU){m.textContent='Connect the Google Sheet first.';return}if(!name||!pin){m.textContent='Enter the PIN and the guest name.';return}const t=$('#htm').value;let ts=Date.now();if(t)ts=Date.parse(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Singapore'}).format(START)+'T'+t+':00+08:00');m.textContent='Adding…';try{const r=await api({action:'manual',name,pin,ts});if(r.ok){sv('dg_pin',pin);m.textContent=r.dup?`${r.name} is already on the board.`:`Added ${r.name}: ${r.points} points ✅`;$('#hn').value='';$('#htm').value='';loadBoard()}else m.textContent=r.err==='pin'?'Wrong PIN.':'Could not add. Try again.'}catch(e){m.textContent='Could not reach the sheet.'}};
 paint();renderCI();tick();route();
 </script></body></html>
