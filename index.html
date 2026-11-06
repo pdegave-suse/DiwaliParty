@@ -163,7 +163,6 @@
       font-weight: 700;
     }
   </style>
-  <!-- Reliable QR Code Generator -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
@@ -195,9 +194,9 @@
 
     <div class="card">
       <h3 style="margin:0 0 8px; color:var(--gold2)">🎁 Early bird surprise</h3>
-      <ul class="rules">
-        <li>Door check-in window: <b>5:30 PM to 7:00 PM SGT</b>.</li>
+      <ul class="rules" style="list-style:disc;">
         <li>Check in between <b>5:30 PM and 6:30 PM</b> at the door to claim your <b class="pos">early bird surprise 🎁</b></li>
+        <li>Early check-in closes at <b>6:30 PM SGT</b>. No gift after 6:30 PM.</li>
       </ul>
       <a class="btn" href="#checkin">Scan QR at Door to Check In</a>
     </div>
@@ -205,18 +204,18 @@
 
   <!-- 2. CHECK-IN WINDOW MENU (ANTI-CHEAT DOOR VALIDATION) -->
   <section id="v-checkin">
-    <!-- State 1: Locked because user hasn't scanned door QR -->
+    <!-- State 1: Locked without door QR scan -->
     <div class="card" id="ciDoorRequiredWrap" style="display:none;">
       <div style="font-size: 2.8rem; margin-bottom: 6px;">🚪</div>
       <h3 style="color:var(--gold2); margin-bottom: 8px;">Door QR Scan Required</h3>
       <p class="sub" style="line-height:1.5;">
-        To ensure fair play for the Early Bird gifts, <b>remote check-in from home is disabled</b>.<br><br>
-        Please scan the physical <b>QR Code at our entrance door</b> when you arrive!
+        To ensure fair play for early bird gifts, <b>remote check-in from home is disabled</b>.<br><br>
+        Please scan the physical <b>QR Code at our entrance door</b> upon arrival!
       </p>
       <a class="btn alt" href="#countdown">Back to Countdown</a>
     </div>
 
-    <!-- State 2: Locked because time is before 5:30 PM or after 7:00 PM -->
+    <!-- State 2: Locked before 5:30 PM or after 7:00 PM -->
     <div class="card" id="ciTimeLockedWrap" style="display:none;">
       <div style="font-size: 2.8rem; margin-bottom: 6px;">🔒</div>
       <h3 style="color:var(--gold2); margin-bottom: 8px;">Check-in Window Closed</h3>
@@ -224,7 +223,7 @@
       <a class="btn alt" href="#countdown">Back to Countdown</a>
     </div>
 
-    <!-- State 3: Active Form (Door QR scanned AND time is between 5:30 PM - 7:00 PM) -->
+    <!-- State 3: Active Form (Door QR scanned AND time is 5:30 PM - 7:00 PM) -->
     <div class="card" id="ciFormWrap" style="display:none;">
       <div style="font-size: 2rem; margin-bottom: 6px;">✅</div>
       <h3 style="color:var(--gold2); margin-bottom: 8px;">Door Verified! Please Check In</h3>
@@ -234,7 +233,7 @@
       <p class="err" id="ciError"></p>
     </div>
 
-    <!-- State 4: Already Checked In Success View -->
+    <!-- State 4: Confirmation Screen -->
     <div class="card" id="ciResultWrap" style="display:none;">
       <div style="font-size: 3rem; margin-bottom: 8px;" id="ciEmoji">🎉</div>
       <div class="success-box" id="ciSuccessMsg"></div>
@@ -252,7 +251,7 @@
       <button class="btn alt" style="margin-top:14px;" onclick="loadGuestStatus()">🔄 Refresh Status</button>
     </div>
 
-    <!-- Host Entry Section (PIN Protected) -->
+    <!-- Host Manual Entry (PIN Protected) -->
     <div class="card">
       <h3 style="color:var(--gold2); margin-bottom: 6px;">👑 Host Manual Entry</h3>
       <p class="sub">Host PIN is required so guests cannot manually add entries.</p>
@@ -276,7 +275,7 @@
 
     <div class="card" id="qrDisplay" style="display:none;">
       <h3 style="color:var(--gold2); margin-bottom: 8px;">Door Check-in QR</h3>
-      <p class="sub" style="margin-bottom: 12px;">Display this at your door. Scanning this QR grants guests physical presence verification.</p>
+      <p class="sub" style="margin-bottom: 12px;">Display this at your door. Scanning verifies presence at the venue.</p>
       <div id="qrContainer"></div>
       <p class="sub" id="qrTargetUrl" style="margin-top:10px; font-size:0.75rem; word-break:break-all;"></p>
       <button class="btn alt" onclick="lockQR()">Lock QR Code</button>
@@ -285,11 +284,10 @@
 </main>
 
 <script>
-  // 1. CONFIGURATION
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2k7dX6r76ceV9w-6yveKgVEvNue5mFVVLiAfJ4UNzjiczgAHY08N4hvG0Ls0-vJ0lew/exec";
-  const DOOR_SECRET_KEY = "diwali2026punggol"; // Anti-cheat secret token embedded in door QR
+  const DOOR_SECRET_KEY = "diwali2026punggol";
 
-  // Timeline (Singapore Time: UTC+8)
+  // Singapore Time: UTC+8
   const T_WINDOW_OPEN  = new Date("2026-11-07T17:30:00+08:00").getTime(); // 5:30 PM SGT
   const T_WINDOW_CLOSE = new Date("2026-11-07T19:00:00+08:00").getTime(); // 7:00 PM SGT
   const T_START        = new Date("2026-11-07T18:00:00+08:00").getTime(); // 6:00 PM SGT
@@ -299,20 +297,17 @@
   const $ = id => document.getElementById(id);
   const pad = n => String(n).padStart(2, '0');
 
-  // Verify if current time is within 5:30 PM - 7:00 PM SGT
   function isCheckinWindowOpen() {
     const now = Date.now();
     return now >= T_WINDOW_OPEN && now <= T_WINDOW_CLOSE;
   }
 
-  // Device fingerprint
   let devId = localStorage.getItem("dg_dev_id");
   if (!devId) {
     devId = Math.random().toString(36).substring(2, 10);
     localStorage.setItem("dg_dev_id", devId);
   }
 
-  // Check URL query parameters for Door QR token (e.g., ?door=diwali2026punggol)
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get("door") === DOOR_SECRET_KEY) {
     sessionStorage.setItem("dg_door_verified", "true");
@@ -322,7 +317,6 @@
     return sessionStorage.getItem("dg_door_verified") === "true";
   }
 
-  // 2. ROUTING & TABS
   function showTab(tab) {
     window.location.hash = tab;
     document.querySelectorAll("nav a").forEach(a => a.classList.remove("active"));
@@ -342,7 +336,6 @@
     showTab(route);
   });
 
-  // 3. COUNTDOWN ENGINE (6:00 PM to 11:00 PM SGT)
   function updateTimer() {
     const now = Date.now();
 
@@ -391,7 +384,6 @@
   setInterval(updateTimer, 1000);
   updateTimer();
 
-  // 4. CHECK-IN CONTROLLER (Guards: Door QR token + Time window)
   function evaluateCheckinState() {
     const doorReqWrap = $("ciDoorRequiredWrap");
     const timeLockWrap = $("ciTimeLockedWrap");
@@ -399,25 +391,21 @@
     const resultWrap = $("ciResultWrap");
     const savedUser = localStorage.getItem("dg_checked_guest");
 
-    // Hide all panels by default
     doorReqWrap.style.display = "none";
     timeLockWrap.style.display = "none";
     formWrap.style.display = "none";
     resultWrap.style.display = "none";
 
-    // Check if user has already checked in
     if (savedUser) {
       resultWrap.style.display = "block";
       return;
     }
 
-    // CHECK 1: Must have scanned the Door QR code
     if (!isDoorVerified()) {
       doorReqWrap.style.display = "block";
       return;
     }
 
-    // CHECK 2: Must be within 5:30 PM to 7:00 PM SGT
     if (!isCheckinWindowOpen()) {
       timeLockWrap.style.display = "block";
       const now = Date.now();
@@ -429,7 +417,6 @@
       return;
     }
 
-    // Passed both checks: Show check-in form
     formWrap.style.display = "block";
   }
 
@@ -503,7 +490,6 @@
     }
   };
 
-  // 5. GUEST STATUS & HOST MANUAL ENTRY
   async function loadGuestStatus() {
     const list = $("guestList");
     const summary = $("statusSummary");
@@ -541,7 +527,6 @@
     }
   }
 
-  // Host Manual Add (PIN Protected)
   $("btnHostAdd").onclick = async () => {
     const pin = $("hostPinManual").value.trim();
     const name = $("hostGuestName").value.trim();
@@ -576,7 +561,6 @@
     }
   };
 
-  // 6. DOOR QR CODE GENERATOR (HOST PIN ONLY)
   $("btnUnlockQR").onclick = async () => {
     const pin = $("qrPinInput").value.trim();
     const err = $("qrPinError");
@@ -592,11 +576,9 @@
         $("qrGate").style.display = "none";
         $("qrDisplay").style.display = "block";
 
-        // Embed the secret door key into the QR code URL
         const checkinUrlWithDoorKey = `${window.location.origin}${window.location.pathname}?door=${DOOR_SECRET_KEY}#checkin`;
         $("qrTargetUrl").textContent = checkinUrlWithDoorKey;
 
-        // Render QR Code using qrcode.js
         const container = $("qrContainer");
         container.innerHTML = "";
         new QRCode(container, {
@@ -622,7 +604,6 @@
     $("qrContainer").innerHTML = "";
   }
 
-  // Initialize Route
   const initialRoute = location.hash.replace("#", "") || "countdown";
   showTab(initialRoute);
 </script>
