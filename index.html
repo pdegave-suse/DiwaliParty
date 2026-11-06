@@ -463,7 +463,7 @@ const $ = s => document.querySelector(s), pad = n => String(n).padStart(2, '0');
 const ld = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
 const sv = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 
-const SU0 = 'https://script.google.com/macros/s/AKfycbwS33q9AA4MJ0meS9n6iIFnJIhLi54ffU1CL8p2Pw19J3u372D12SGHAsMOtXqu3u3GKA/exec';
+const SU0 = 'https://script.google.com/macros/s/AKfycbzW4NSLNasNo3OdZbbSkCABO1h0Qygl3yY1_oCBXzR1BPk5dA0rgYqUybnBwB6aPQt7/exec';
 const SU = /^https:\/\/script\.google\.com\//.test(SU0) ? SU0 : '';
 const TB = false, qs = new URLSearchParams(location.search), TEST = TB || qs.has('test');
 const M1 = 30, OPEN = 30, K = TEST ? 't_' : '';
