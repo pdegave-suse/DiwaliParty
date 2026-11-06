@@ -28,11 +28,11 @@
       color: var(--txt);
       font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
       text-align: center;
-      padding: 20px 14px 40px;
+      padding: 24px 14px 40px;
     }
 
     main { max-width: 520px; margin: 0 auto; }
-    .big-diya { font-size: 3rem; margin-bottom: 4px; }
+    .big-diya { font-size: 2.5rem; margin-bottom: 4px; }
     h1 {
       font-family: Georgia, serif;
       font-size: 1.8rem;
@@ -58,6 +58,7 @@
       background: var(--card);
       font-weight: 600;
       cursor: pointer;
+      transition: background 0.2s;
     }
     nav a.active {
       background: var(--gold);
@@ -72,7 +73,7 @@
       background: var(--card);
       border: 1px solid var(--card-border);
       border-radius: 18px;
-      padding: 20px;
+      padding: 22px 18px;
       margin-bottom: 16px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     }
@@ -113,7 +114,6 @@
       font-size: 1rem;
       text-decoration: none;
       cursor: pointer;
-      transition: opacity 0.2s;
     }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn.alt {
@@ -129,8 +129,18 @@
     .err { color: var(--bad); font-size: 0.9rem; margin-top: 6px; }
     .success-box { font-size: 1.15rem; line-height: 1.5; }
 
-    /* QR Code */
-    #qrContainer svg { width: 100%; height: auto; max-width: 250px; background: white; padding: 12px; border-radius: 14px; }
+    /* QR Code Box */
+    #qrContainer {
+      display: inline-block;
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 16px;
+      margin: 10px auto;
+    }
+    #qrContainer canvas, #qrContainer img {
+      display: block;
+      margin: 0 auto;
+    }
 
     /* Board List */
     ol { list-style: none; text-align: left; }
@@ -153,6 +163,8 @@
       font-weight: 700;
     }
   </style>
+  <!-- Dedicated, stable QR Code engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <main>
@@ -160,7 +172,7 @@
   <h1>Degave Family Diwali Party</h1>
   <p class="sub">Saturday, 7th November 2026 · 6 PM sharp · Punggol</p>
 
-  <!-- NAVIGATION TABS -->
+  <!-- NAVIGATION -->
   <nav>
     <a href="#countdown" id="tab-countdown" class="active">⏳ Countdown</a>
     <a href="#checkin" id="tab-checkin">✅ Check-in</a>
@@ -184,8 +196,8 @@
     <div class="card">
       <h3 style="margin:0 0 8px; color:var(--gold2)">🎁 Early bird surprise</h3>
       <ul class="rules">
-        <li>Check-in opens at <b>5:30 PM</b>. Scan the QR at the door.</li>
-        <li>Check in between <b>6:00 PM and 6:30 PM</b> to claim your <b class="pos">early bird surprise 🎁</b></li>
+        <li>Check-in window: <b>5:30 PM to 7:00 PM SGT</b>.</li>
+        <li>Check in between <b>5:30 PM and 6:30 PM</b> to claim your <b class="pos">early bird surprise 🎁</b></li>
       </ul>
       <a class="btn" href="#checkin">I'm here! Check in</a>
     </div>
@@ -193,18 +205,31 @@
 
   <!-- 2. CHECK-IN WINDOW MENU -->
   <section id="v-checkin">
+    <!-- State A: Locked (Before 5:30 PM or After 7:00 PM) -->
+    <div class="card" id="ciLockedWrap" style="display:none;">
+      <div style="font-size: 2.8rem; margin-bottom: 6px;">🔒</div>
+      <h3 style="color:var(--gold2); margin-bottom: 8px;">Check-in is Currently Locked</h3>
+      <p class="sub" id="ciLockReason" style="line-height:1.5;">
+        Check-in is only available between <b>5:30 PM and 7:00 PM SGT</b> on Saturday, 7th November 2026.
+      </p>
+      <a class="btn alt" href="#countdown">Back to Countdown</a>
+    </div>
+
+    <!-- State B: Active Form (During 5:30 PM - 7:00 PM) -->
     <div class="card" id="ciFormWrap">
       <h3 style="color:var(--gold2); margin-bottom: 8px;">Welcome! Register Check-in</h3>
-      <p class="sub" style="margin-bottom:14px;">Scan the QR code at the entrance and add your name.</p>
+      <p class="sub" style="margin-bottom:14px;">Enter your name to record your arrival.</p>
       <input id="guestName" placeholder="Your Full Name / Nickname" maxlength="30" autocomplete="off">
       <button class="btn" id="btnCheckin">Complete Check-in</button>
       <p class="err" id="ciError"></p>
     </div>
 
+    <!-- State C: Success Message -->
     <div class="card" id="ciResultWrap" style="display:none;">
       <div style="font-size: 3rem; margin-bottom: 8px;" id="ciEmoji">🎉</div>
       <div class="success-box" id="ciSuccessMsg"></div>
       <a class="btn alt" href="#status">View Guest Status Board</a>
+      <button class="btn alt" style="margin-top:8px; border:none; opacity:0.8; font-size:0.85rem;" onclick="resetMyCheckin()">Clear / Check in another</button>
     </div>
   </section>
 
@@ -220,61 +245,64 @@
     <!-- Host Entry Section (PIN Protected) -->
     <div class="card">
       <h3 style="color:var(--gold2); margin-bottom: 6px;">👑 Host Manual Entry</h3>
-      <p class="sub">PIN is required so guests cannot manually add entries.</p>
-      <input id="hostPinManual" type="password" placeholder="Enter Host PIN">
+      <p class="sub">Host PIN is required so guests cannot manually add entries.</p>
+      <input id="hostPinManual" type="password" placeholder="Enter Host PIN" autocomplete="off">
       <input id="hostGuestName" placeholder="Guest Name">
       <button class="btn" id="btnHostAdd">Add Guest as Host</button>
       <p class="err" id="hostAddMsg"></p>
     </div>
   </section>
 
-  <!-- 4. PROTECTED QR CODE MENU (HOST ONLY) -->
+  <!-- 4. DOOR QR CODE MENU (HOST ONLY) -->
   <section id="v-qr">
     <div class="card" id="qrGate">
-      <h3 style="color:var(--gold2); margin-bottom: 8px;">🔐 Host Protected QR Code</h3>
-      <p class="sub">Enter your Host PIN to display the door check-in QR code.</p>
-      <input id="qrPinInput" type="password" placeholder="Enter Host PIN">
+      <div style="font-size: 2.4rem; margin-bottom: 6px;">🔐</div>
+      <h3 style="color:var(--gold2); margin-bottom: 8px;">Host Protected Door QR</h3>
+      <p class="sub">Enter the Host PIN to display the door check-in QR code.</p>
+      <input id="qrPinInput" type="password" placeholder="Enter Host PIN" autocomplete="off">
       <button class="btn" id="btnUnlockQR">Reveal QR Code</button>
       <p class="err" id="qrPinError"></p>
     </div>
 
     <div class="card" id="qrDisplay" style="display:none;">
       <h3 style="color:var(--gold2); margin-bottom: 8px;">Door Check-in QR</h3>
-      <p class="sub" style="margin-bottom: 12px;">Display this at the door for guests to scan.</p>
-      <div id="qrContainer" style="display:flex; justify-content:center;"></div>
+      <p class="sub" style="margin-bottom: 12px;">Display this at the door. When guests scan it, they will be taken straight to the check-in page.</p>
+      <div id="qrContainer"></div>
+      <p class="sub" id="qrTargetUrl" style="margin-top:10px; font-size:0.8rem; word-break:break-all;"></p>
       <button class="btn alt" onclick="lockQR()">Lock QR Code</button>
     </div>
   </section>
 </main>
 
-<!-- Inlined Kazuhiko Arase QR Generator -->
-<script>
-var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null,e=0,f=null,g=[],h={};h.addData=function(a){g.push(qr8BitByte(a));f=null};h.isDark=function(a,b){return d[a][b]};h.getModuleCount=function(){return e};h.make=function(){e=a*4+17;d=function(a){for(var b=[],c=0;c<a;c++){b[c]=[];for(var d=0;d<a;d++)b[c][d]=null}return b}(e);l(0,0);l(e-7,0);l(0,e-7);m();n();p(false,0);if(f==null)f=createData(a,c,g);mapData(f,0)};var l=function(a,b){for(var c=-1;c<=7;c++){if(a+c<=-1||e<=a+c)continue;for(var f=-1;f<=7;f++){if(b+f<=-1||e<=b+f)continue;if(0<=c&&c<=6&&(f==0||f==6)||0<=f&&f<=6&&(c==0||c==6)||2<=c&&c<=4&&2<=f&&f<=4)d[a+c][b+f]=true;else d[a+c][b+f]=false}}};var m=function(){for(var a=8;a<e-8;a++){if(d[a][6]!=null)continue;d[a][6]=a%2==0}for(var b=8;b<e-8;b++){if(d[6][b]!=null)continue;d[6][b]=b%2==0}};var n=function(){var b=QRUtil.getPatternPosition(a);for(var c=0;c<b.length;c++)for(var f=0;f<b.length;f++){var g=b[c],h=b[f];if(d[g][h]!=null)continue;for(var i=-2;i<=2;i++)for(var j=-2;j<=2;j++)if(i==-2||i==2||j==-2||j==2||i==0&&j==0)d[g+i][h+j]=true;else d[g+i][h+j]=false}};var p=function(a,b){var f=(c<<3)|b,g=QRUtil.getBCHTypeInfo(f);for(var h=0;h<15;h++){var i=!a&&((g>>h)&1)==1;if(h<6)d[h][8]=i;else if(h<8)d[h+1][8]=i;else d[e-15+h][8]=i}for(var j=0;j<15;j++){var k=!a&&((g>>j)&1)==1;if(j<8)d[8][e-j-1]=k;else if(j<9)d[8][15-j-1+1]=k;else d[8][15-j-1]=k}d[e-8][8]=!a};h.createSvgTag=function(a,b){a=a||4;b=b||0;var c=e*a+b*2,f='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+c+' '+c+'"><rect width="100%" height="100%" fill="white"/><path d="';for(var g=0;g<e;g++)for(var h=0;h<e;h++)if(d[g][h]){var i=h*a+b,j=g*a+b;f+='M'+i+','+j+'h'+a+'v'+a+'h-'+a+'z '}return f+'" fill="black"/></svg>'};return h};var QRMode={MODE_8BIT_BYTE:4},QRErrorCorrectionLevel={L:1,M:0,Q:3,H:2},QRMaskPattern={PATTERN000:0};var QRUtil={getPatternPosition:function(){return[6,26,50]},getBCHTypeInfo:function(a){var b=a<<10;while(QRUtil.getBCHDigit(b)-QRUtil.getBCHDigit(1335)>=0)b^=1335<<(QRUtil.getBCHDigit(b)-QRUtil.getBCHDigit(1335));return((a<<10)|b)^21522},getBCHDigit:function(a){var b=0;while(a!=0){b++;a>>>=1}return b}};var qr8BitByte=function(a){return{getMode:function(){return QRMode.MODE_8BIT_BYTE},getLength:function(){return a.length},write:function(b){for(var c=0;c<a.length;c++)b.put(a.charCodeAt(c),8)}}};var qrBitBuffer=function(){var a=[],b=0;return{getBuffer:function(){return a},put:function(c,d){for(var e=0;e<d;e++)this.putBit(((c>>>(d-e-1))&1)==1)},putBit:function(c){var d=Math.floor(b/8);if(a.length<=d)a.push(0);if(c)a[d]|=(128>>>(b%8));b++}}};var createData=function(a,b,c){var d=qrBitBuffer();for(var e=0;e<c.length;e++){var f=c[e];d.put(f.getMode(),4);d.put(f.getLength(),8);f.write(d)}d.put(0,4);var g=d.getBuffer(),h=new Array(70);for(var i=0;i<70;i++)h[i]=i<g.length?g[i]:0;return h};var mapData=function(a,b){};return q}();
-</script>
-
 <script>
   // 1. CONFIGURATION
-  // REPLACE WITH YOUR PUBLISHED APPS SCRIPT WEB APP URL:
+  // Google Apps Script Web App URL:
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2k7dX6r76ceV9w-6yveKgVEvNue5mFVVLiAfJ4UNzjiczgAHY08N4hvG0Ls0-vJ0lew/exec";
 
-  // Timeline: Nov 7, 2026 Singapore Time (UTC+8)
-  const T_START = new Date("2026-11-07T18:00:00+08:00").getTime(); // 6:00 PM
-  const T_END   = new Date("2026-11-07T23:00:00+08:00").getTime(); // 11:00 PM
-  const T_OPEN  = new Date("2026-11-07T17:30:00+08:00").getTime(); // 5:30 PM
-  const T_EARLY_END = new Date("2026-11-07T18:30:00+08:00").getTime(); // 6:30 PM
+  // Check-in Window: Nov 7, 2026 Singapore Time (UTC+8)
+  const T_WINDOW_OPEN  = new Date("2026-11-07T17:30:00+08:00").getTime(); // 5:30 PM SGT
+  const T_WINDOW_CLOSE = new Date("2026-11-07T19:00:00+08:00").getTime(); // 7:00 PM SGT
+  const T_START        = new Date("2026-11-07T18:00:00+08:00").getTime(); // 6:00 PM SGT
+  const T_EARLY_END    = new Date("2026-11-07T18:30:00+08:00").getTime(); // 6:30 PM SGT
+  const T_PARTY_END    = new Date("2026-11-07T23:00:00+08:00").getTime(); // 11:00 PM SGT
 
-  // Helper selectors
   const $ = id => document.getElementById(id);
   const pad = n => String(n).padStart(2, '0');
 
-  // Device fingerprint for local caching
+  // Verify if current time is within 5:30 PM - 7:00 PM SGT
+  function isCheckinWindowOpen() {
+    const now = Date.now();
+    return now >= T_WINDOW_OPEN && now <= T_WINDOW_CLOSE;
+  }
+
+  // Device identifier
   let devId = localStorage.getItem("dg_dev_id");
   if (!devId) {
     devId = Math.random().toString(36).substring(2, 10);
     localStorage.setItem("dg_dev_id", devId);
   }
 
-  // 2. NAVIGATION ROUTING
+  // 2. ROUTING & TABS
   function showTab(tab) {
     window.location.hash = tab;
     document.querySelectorAll("nav a").forEach(a => a.classList.remove("active"));
@@ -285,6 +313,7 @@ var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null
     if (navLink) navLink.classList.add("active");
     if (sec) sec.classList.add("active");
 
+    if (tab === "checkin") evaluateCheckinState();
     if (tab === "status") loadGuestStatus();
   }
 
@@ -293,12 +322,11 @@ var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null
     showTab(route);
   });
 
-  // 3. COUNTDOWN ENGINE (6:00 PM SGT to 11:00 PM SGT)
+  // 3. COUNTDOWN ENGINE (6:00 PM to 11:00 PM SGT)
   function updateTimer() {
     const now = Date.now();
 
     if (now < T_START) {
-      // Counting down to 6:00 PM
       $("timerTitle").textContent = "Countdown to 6:00 PM Sharp";
       const diff = T_START - now;
       const s = Math.floor(diff / 1000);
@@ -307,15 +335,14 @@ var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null
       $("M").textContent = pad(Math.floor((s % 3600) / 60));
       $("S").textContent = pad(s % 60);
 
-      if (now >= T_OPEN) {
-        $("cmsg").textContent = "Check-in is now OPEN at the door! Early bird surprise unlocks at 6:00 PM.";
+      if (now >= T_WINDOW_OPEN) {
+        $("cmsg").textContent = "Check-in is now OPEN at the door! Early bird surprise ends at 6:30 PM.";
       } else {
         $("cmsg").textContent = "Check-in opens at 5:30 PM. Party begins at 6:00 PM sharp!";
       }
-    } else if (now >= T_START && now <= T_END) {
-      // Party in progress until 11:00 PM SGT
+    } else if (now >= T_START && now <= T_PARTY_END) {
       $("timerTitle").textContent = "Party In Progress! 🪔";
-      const diff = T_END - now;
+      const diff = T_PARTY_END - now;
       const s = Math.floor(diff / 1000);
       $("D").textContent = "00";
       $("Hr").textContent = pad(Math.floor(s / 3600));
@@ -324,23 +351,72 @@ var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null
 
       if (now <= T_EARLY_END) {
         const minsLeft = Math.ceil((T_EARLY_END - now) / 60000);
-        $("cmsg").textContent = `🎁 Early Bird active! ${minsLeft} mins left to claim your surprise!`;
+        $("cmsg").textContent = `🎁 Early Bird active! ${minsLeft} min left to claim your surprise!`;
+      } else if (now <= T_WINDOW_CLOSE) {
+        $("cmsg").textContent = "Check-in is open until 7:00 PM SGT.";
       } else {
-        $("cmsg").textContent = "The party is in full swing! Event wraps up at 11:00 PM SGT.";
+        $("cmsg").textContent = "Check-in closed at 7:00 PM. Enjoy the rest of the party!";
       }
     } else {
-      // After 11:00 PM SGT
       $("timerTitle").textContent = "Party Ended";
       $("D").textContent = "00"; $("Hr").textContent = "00";
       $("M").textContent = "00"; $("S").textContent = "00";
       $("cmsg").textContent = "Thank you for celebrating Diwali with the Degave family! 🎆";
     }
+
+    if (location.hash === "#checkin") {
+      evaluateCheckinState();
+    }
   }
   setInterval(updateTimer, 1000);
   updateTimer();
 
-  // 4. CHECK-IN LOGIC
+  // 4. CHECK-IN CONTROLLER (Guarded 5:30 PM - 7:00 PM)
+  function evaluateCheckinState() {
+    const lockedWrap = $("ciLockedWrap");
+    const formWrap = $("ciFormWrap");
+    const resultWrap = $("ciResultWrap");
+    const savedUser = localStorage.getItem("dg_checked_guest");
+
+    // Guard: Window check
+    if (!isCheckinWindowOpen()) {
+      lockedWrap.style.display = "block";
+      formWrap.style.display = "none";
+      resultWrap.style.display = "none";
+
+      const now = Date.now();
+      if (now < T_WINDOW_OPEN) {
+        $("ciLockReason").innerHTML = "Check-in will strictly open at <b>5:30 PM SGT</b>.<br>Please scan the door QR code once you arrive!";
+      } else {
+        $("ciLockReason").innerHTML = "Self check-in closed at <b>7:00 PM SGT</b>.<br>If you just arrived, please speak to the host to check you in!";
+      }
+      return;
+    }
+
+    // Window is OPEN
+    lockedWrap.style.display = "none";
+    if (savedUser) {
+      formWrap.style.display = "none";
+      resultWrap.style.display = "block";
+    } else {
+      formWrap.style.display = "block";
+      resultWrap.style.display = "none";
+    }
+  }
+
+  function resetMyCheckin() {
+    localStorage.removeItem("dg_checked_guest");
+    evaluateCheckinState();
+  }
+
   $("btnCheckin").onclick = async () => {
+    // Immediate verification of 5:30 PM - 7:00 PM window
+    if (!isCheckinWindowOpen()) {
+      alert("Check-in is strictly allowed between 5:30 PM and 7:00 PM SGT only.");
+      evaluateCheckinState();
+      return;
+    }
+
     const name = $("guestName").value.trim();
     const err = $("ciError");
     err.textContent = "";
@@ -354,33 +430,47 @@ var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null
     btn.disabled = true;
     btn.textContent = "Checking in...";
 
+    const now = Date.now();
+    const isEarly = now >= T_WINDOW_OPEN && now <= T_EARLY_END;
+
     try {
       const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=checkin&name=${encodeURIComponent(name)}&dev=${devId}`);
       const data = await res.json();
 
       if (data.ok) {
+        localStorage.setItem("dg_checked_guest", name);
         $("ciFormWrap").style.display = "none";
         $("ciResultWrap").style.display = "block";
 
-        if (data.earlyBird) {
+        if (data.earlyBird || isEarly) {
           $("ciEmoji").textContent = "🎁";
-          $("ciSuccessMsg").innerHTML = `<b>Welcome ${data.name}!</b><br><span style="color:var(--ok); font-weight:bold;">🎉 Congratulations! You won the Early Bird Surprise Gift!</span><br>Please show this screen to the host to claim it.`;
+          $("ciSuccessMsg").innerHTML = `<b>Welcome ${data.name}!</b><br><span style="color:var(--ok); font-weight:bold;">🎉 Congratulations! You won the Early Bird Surprise Gift!</span><br>Show this confirmation to the host to claim it.`;
         } else {
           $("ciEmoji").textContent = "🪔";
-          $("ciSuccessMsg").innerHTML = `<b>Welcome ${data.name}!</b><br>You are successfully checked in. Have a great time at the party!`;
+          $("ciSuccessMsg").innerHTML = `<b>Welcome ${data.name}!</b><br>You are successfully checked in. Have a wonderful time at the party!`;
         }
       } else {
-        err.textContent = data.err || "Check-in failed. Please try again.";
+        err.textContent = data.err || "Check-in could not be completed. Please retry.";
       }
     } catch (e) {
-      err.textContent = "Network error. Please try again or notify the host.";
+      // Local fallback if sheet is unreachable
+      localStorage.setItem("dg_checked_guest", name);
+      $("ciFormWrap").style.display = "none";
+      $("ciResultWrap").style.display = "block";
+      if (isEarly) {
+        $("ciEmoji").textContent = "🎁";
+        $("ciSuccessMsg").innerHTML = `<b>Welcome ${name}!</b><br><span style="color:var(--ok); font-weight:bold;">🎉 You arrived in time for the Early Bird Gift!</span><br>Show this screen to the host.`;
+      } else {
+        $("ciEmoji").textContent = "🪔";
+        $("ciSuccessMsg").innerHTML = `<b>Welcome ${name}!</b><br>You are checked in! Have fun!`;
+      }
     } finally {
       btn.disabled = false;
       btn.textContent = "Complete Check-in";
     }
   };
 
-  // 5. GUEST CHECK-IN STATUS & HOST ENTRY
+  // 5. GUEST STATUS & HOST MANUAL ENTRY
   async function loadGuestStatus() {
     const list = $("guestList");
     const summary = $("statusSummary");
@@ -393,7 +483,7 @@ var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null
       if (data.ok && Array.isArray(data.guests)) {
         list.innerHTML = "";
         const earlyCount = data.guests.filter(g => g.earlyBird).length;
-        summary.textContent = `${data.guests.length} checked-in · ${earlyCount} early bird prize winners 🎁`;
+        summary.textContent = `${data.guests.length} checked-in · ${earlyCount} early bird winner${earlyCount === 1 ? '' : 's'} 🎁`;
 
         if (data.guests.length === 0) {
           list.innerHTML = `<li style="justify-content:center; color:var(--mut);">No check-ins yet.</li>`;
@@ -414,11 +504,11 @@ var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null
         });
       }
     } catch (e) {
-      summary.textContent = "Could not fetch status. Tap refresh to retry.";
+      summary.textContent = "Unable to fetch online status. Check connection.";
     }
   }
 
-  // Host manual add
+  // Host Manual Add (PIN Protected)
   $("btnHostAdd").onclick = async () => {
     const pin = $("hostPinManual").value.trim();
     const name = $("hostGuestName").value.trim();
@@ -426,7 +516,7 @@ var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null
     msg.textContent = "";
 
     if (!pin) { msg.textContent = "Host PIN is required."; return; }
-    if (!name) { msg.textContent = "Guest name is required."; return; }
+    if (!name) { msg.textContent = "Please enter guest name."; return; }
 
     const btn = $("btnHostAdd");
     btn.disabled = true;
@@ -438,7 +528,7 @@ var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null
       if (data.ok) {
         $("hostGuestName").value = "";
         msg.style.color = "var(--ok)";
-        msg.textContent = `Successfully added ${data.name}!`;
+        msg.textContent = `Added ${data.name}${data.earlyBird ? " (🎁 Early Bird)" : ""}!`;
         loadGuestStatus();
       } else {
         msg.style.color = "var(--bad)";
@@ -446,14 +536,14 @@ var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null
       }
     } catch (e) {
       msg.style.color = "var(--bad)";
-      msg.textContent = "Connection error.";
+      msg.textContent = "Failed to reach sheet.";
     } finally {
       btn.disabled = false;
       btn.textContent = "Add Guest as Host";
     }
   };
 
-  // 6. PROTECTED QR GENERATION (HOST ONLY)
+  // 6. DOOR QR CODE GENERATOR (HOST PIN ONLY)
   $("btnUnlockQR").onclick = async () => {
     const pin = $("qrPinInput").value.trim();
     const err = $("qrPinError");
@@ -465,21 +555,30 @@ var qrcode=function(){var q=function(a,b){var c=QRErrorCorrectionLevel[b],d=null
       const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=verifyPin&pin=${encodeURIComponent(pin)}`);
       const data = await res.json();
 
-      if (data.ok) {
+      if (data && data.ok) {
         $("qrGate").style.display = "none";
         $("qrDisplay").style.display = "block";
 
-        // Generate redirect URL to #checkin
+        // URL redirecting directly to the Check-in tab
         const checkinUrl = window.location.origin + window.location.pathname + "#checkin";
-        const qr = qrcode(6, 'M');
-        qr.addData(checkinUrl);
-        qr.make();
-        $("qrContainer").innerHTML = qr.createSvgTag(6, 4);
+        $("qrTargetUrl").textContent = checkinUrl;
+
+        // Render QR
+        const container = $("qrContainer");
+        container.innerHTML = "";
+        new QRCode(container, {
+          text: checkinUrl,
+          width: 220,
+          height: 220,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
       } else {
-        err.textContent = "Invalid PIN. Access denied.";
+        err.textContent = "Invalid Host PIN. Access denied.";
       }
     } catch (e) {
-      err.textContent = "Could not verify PIN. Please try again.";
+      err.textContent = "Could not verify PIN online. Please check network.";
     }
   };
 
