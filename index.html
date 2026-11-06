@@ -15,8 +15,7 @@ h1{font-family:Georgia,"Times New Roman",serif;font-size:1.7rem;margin:6px 0 2px
 nav{display:flex;gap:6px;margin:0 0 16px}
 nav a{flex:1;padding:10px 4px;border-radius:12px;border:1px solid var(--line);color:var(--txt);text-decoration:none;font-size:.9rem;background:var(--card)}
 nav a[aria-current=page]{background:var(--gold);color:#2a1200;font-weight:700}
-section{display:none}
-section.on{display:block}
+section{display:none}section.on{display:block}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0 0 14px}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .box{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:14px;padding:12px 2px}
@@ -33,337 +32,218 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 #qrbox svg{width:100%;height:auto;display:block}
 ol{list-style:none;margin:0;padding:0;text-align:left}
 li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
-li .n{flex:1}
-li small{display:block;color:var(--mut)}
+li .n{flex:1}li small{display:block;color:var(--mut)}
 li button{background:none;border:0;color:var(--mut);font-size:1.3rem;cursor:pointer}
-.pos{color:var(--ok)}
-.neg{color:var(--bad)}
-.mut{color:var(--mut);justify-content:center}
-.row{display:flex;gap:8px}
-.row input{margin:0}
-[hidden]{display:none!important}
+.pos{color:var(--ok)}.neg{color:var(--bad)}.mut{color:var(--mut);justify-content:center}
+.row{display:flex;gap:8px}.row input{margin:0}
+label{color:var(--mut);font-size:.9rem;display:flex;gap:8px;align-items:center;justify-content:center;margin-top:10px}
+label input{width:auto;margin:0}
+[hidden]{display:none!important}.row .btn{margin:0}.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g2 .btn{margin:0;font-size:.9rem;padding:12px 6px}
 .warn{color:#ffd27a;font-size:.9rem}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.g2 .btn{margin:0;font-size:.9rem;padding:12px 6px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 </head>
-<body>
-<main>
+<body><main>
 <div class="big">🪔</div>
 <h1>Degave Family Diwali Party</h1>
 <p class="sub" id="sub">Saturday, 7th November 2026 · 6 PM sharp · Punggol</p>
-
 <nav>
   <a href="#countdown" aria-current="page">⏳ Countdown</a>
   <a href="#checkin">✅ Check in</a>
   <a href="#board">🏆 Board</a>
 </nav>
 
-<!-- COUNTDOWN SECTION: starts with class="on" so it is visible immediately -->
 <section id="v-countdown" class="on">
-  <div class="card">
-    <div class="grid">
-      <div class="box"><b id="D">--</b><small>Days</small></div>
-      <div class="box"><b id="Hr">--</b><small>Hours</small></div>
-      <div class="box"><b id="M">--</b><small>Mins</small></div>
-      <div class="box"><b id="S">--</b><small>Secs</small></div>
-    </div>
-    <p id="cmsg">Arrive between 6:00 PM and 6:30 PM to claim your surprise!</p>
-  </div>
-
-  <div class="card">
-    <h3 style="margin:0 0 8px;color:var(--gold2)">🎁 Early bird surprise</h3>
+  <div class="card"><div class="grid">
+    <div class="box"><b id="D">00</b><small>Days</small></div><div class="box"><b id="Hr">00</b><small>Hours</small></div>
+    <div class="box"><b id="M">00</b><small>Mins</small></div><div class="box"><b id="S">00</b><small>Secs</small></div></div>
+    <p id="cmsg"></p></div>
+  <div class="card"><h3 style="margin:0 0 8px;color:var(--gold2)">🎁 Early bird surprise</h3>
     <ul class="rules" style="list-style:disc">
-      <li style="display:list-item;border:0;padding:0">Scan the QR at the door and check in.</li>
-      <li style="display:list-item;border:0;padding:0">Between <b class="pos">6:00 PM and 6:30 PM</b>: claim your <b class="pos">early bird surprise 🎁</b></li>
-      <li style="display:list-item;border:0;padding:0">Checked in after 6:30 PM? Welcome to the party! The fun is just getting started 🎶</li>
-      <li style="display:list-item;border:0;padding:0">Checked in before 6:00 PM? Please check in again from 6:00 PM to claim it.</li>
-    </ul>
-  </div>
-
+      <li style="display:list-item;border:0;padding:0">Check-in opens at <b data-o="-30">5:30 PM</b>. Scan the QR at the door.</li>
+      <li style="display:list-item;border:0;padding:0">Check in between <b data-o="0">6:00 PM</b> and <b data-o="30">6:30 PM</b> to claim your <b class="pos">early bird surprise 🎁</b></li>
+      <li style="display:list-item;border:0;padding:0">Checked in before <b data-o="0">6:00 PM</b>? Please check in again from <b data-o="0">6:00 PM</b> to claim it.</li>
+    </ul></div>
   <a class="btn" href="#checkin">I’m here! Check in</a>
-
-  <div class="card" id="tc" hidden style="margin-top:14px">
-    <h3 style="margin:0 0 6px;color:var(--gold2)">🧪 Lab test controls</h3>
+  <div class="card" id="tc" hidden style="margin-top:14px"><h3 style="margin:0 0 6px;color:var(--gold2)">🧪 Lab test controls</h3>
     <p class="sub" style="margin:0 0 10px">Moves the party start so you can test. Also clears this phone’s check-in.</p>
-    <div class="g2">
-      <button class="btn alt" data-m="1">Starts in 1 min</button>
-      <button class="btn alt" data-m="-10">Started 10 min ago (early bird)</button>
-      <button class="btn alt" data-m="-40">Started 40 min ago (too late)</button>
-    </div>
-    <button class="btn alt" id="tcr">Reset to real party time</button>
-  </div>
+    <div class="g2"><button class="btn alt" data-m="1">Starts in 1 min</button><button class="btn alt" data-m="-10">Started 10 min ago (early bird)</button><button class="btn alt" data-m="-40">Started 40 min ago (too late)</button></div>
+    <button class="btn alt" id="tcr">Reset to real party time</button></div>
 </section>
 
-<!-- CHECKIN SECTION -->
 <section id="v-checkin">
-  <div class="card" id="ciForm">
-    <h3 style="margin:0 0 10px;color:var(--gold2)">Welcome! Check in to score</h3>
-    <p class="warn" id="ciHint" style="margin:0 0 10px"></p>
+  <div class="card" id="ciForm"><h3 style="margin:0 0 10px;color:var(--gold2)">Welcome! Check in to score</h3><p class="warn" id="ciHint" style="margin:0 0 10px"></p>
     <input id="nm" placeholder="Your name" maxlength="30" autocomplete="name">
-    <button class="btn" id="ciBtn">Check in now</button>
-    <p class="err" id="ciErr"></p>
-  </div>
-  <div class="card" id="ciRes" hidden>
-    <div class="big" id="ciBig"></div>
-    <p id="ciTxt" style="font-size:1.2rem"></p>
-    <p class="warn" id="ciNote"></p>
-  </div>
+    <button class="btn" id="ciBtn">Check in now</button><p class="err" id="ciErr"></p></div>
+  <div class="card" id="ciRes" hidden><div class="big" id="ciBig"></div><p id="ciTxt" style="font-size:1.2rem"></p><p class="warn" id="ciNote"></p></div>
 </section>
 
-<!-- QR CODE SECTION -->
 <section id="v-qr">
-  <div class="card">
-    <h3 style="margin:0 0 8px;color:var(--gold2)">Scan to check in</h3>
+  <div class="card"><h3 style="margin:0 0 8px;color:var(--gold2)">Scan to check in</h3>
     <div id="qrbox"></div>
-  </div>
+    <p class="warn" id="clnote" hidden>Host index.html on a public site (GitHub Pages) and open that link to get the guest QR.</p></div>
 </section>
 
-<!-- BOARD SECTION -->
 <section id="v-board">
-  <div class="card">
-    <h3 style="margin:0 0 10px;color:var(--gold2)">👑 Host: live guest list</h3>
-    <input id="hp" type="password" placeholder="Host PIN (e.g. 1234)" autocomplete="off">
+  <div class="card"><h3 style="margin:0 0 10px;color:var(--gold2)">👑 Host: live guest list</h3>
+    <input id="hp" type="password" placeholder="Host PIN" autocomplete="off">
     <button class="btn" id="bdRef">Refresh guest list</button>
-    <p class="sub" id="bdSum" style="margin:10px 0 0"></p>
-    <ol id="bd"></ol>
-    <p class="sub" id="bdMsg"></p>
-  </div>
-  <div class="card">
-    <h3 style="margin:0 0 10px;color:var(--gold2)">Add a guest manually</h3>
-    <input id="hn" placeholder="Guest name" maxlength="30">
-    <input id="htm" type="time" aria-label="Arrival time (Singapore)">
-    <p class="sub" style="margin:0 6px">Leave the time empty to use the time right now.</p>
-    <button class="btn" id="hAdd">Add guest</button>
-    <p class="sub" id="hMsg"></p>
-  </div>
+    <p class="sub" id="bdSum" style="margin:10px 0 0"></p><ol id="bd"></ol><p class="sub" id="bdMsg"></p></div>
+  <div class="card"><h3 style="margin:0 0 10px;color:var(--gold2)">Add a guest manually</h3>
+    <input id="hn" placeholder="Guest name" maxlength="30"><input id="htm" type="time" aria-label="Arrival time (Singapore)">
+    <p class="sub" style="margin:0 0 6px">Leave the time empty to use the time right now.</p>
+    <button class="btn" id="hAdd">Add guest</button><p class="sub" id="hMsg"></p></div>
 </section>
 </main>
 
 <script>
-const $ = s => document.querySelector(s);
-const pad = n => String(n).padStart(2, '0');
-const ld = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch(e) { return d; } };
-const sv = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} };
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0');
+const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const SU0='https://script.google.com/macros/s/AKfycbzW4NSLNasNo3OdZbbSkCABO1h0Qygl3yY1_oCBXzR1BPk5dA0rgYqUybnBwB6aPQt7/exec';
+const SU=/^https:\/\/script\.google\.com\//.test(SU0)?SU0:'',TB=false,qs=new URLSearchParams(location.search),TEST=TB||qs.has('test');
+const M1=30,OPEN=30,K=TEST?'t_':'';
+if(qs.get('k'))sv('dg_k',qs.get('k'));const KEY=ld('dg_k','');
+const pe=v=>{if(!v)return 0;if(/^\d{1,2}:\d{2}$/.test(v))return Date.parse(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Singapore'}).format(new Date())+'T'+v.padStart(5,'0')+':00+08:00')||0;return Date.parse(/[zZ]|[+-]\d\d:?\d\d$/.test(v)?v:v+'+08:00')||0};
+const START0=pe(qs.get('start'))&&TEST?pe(qs.get('start')):Date.parse('2026-11-07T18:00:00+08:00');let START=START0;
+if(TEST){const o=ld(K+'dg_start',0);if(o)START=o}
+let DEV=ld(K+'dg_dev','');if(!DEV){DEV=Math.random().toString(36).slice(2,12);sv(K+'dg_dev',DEV)}
+const tm=ms=>new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'numeric',minute:'2-digit',hour12:true}).format(ms).toUpperCase();
+const tms=ms=>new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true}).format(ms).toUpperCase();
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'''}[c]));
+const stat=ms=>ms<START?'early':ms<=START+M1*6e4?'bird':'late';
+const res=ms=>{const t=stat(ms);return t==='early'?{e:'⏰',txt:`You’re early! Check in again from ${tm(START)} to claim your early bird surprise 🎁`}:t==='bird'?{e:'🎉',txt:'You’re an early bird! Show this screen to the host to claim your surprise 🎁'}:{e:'🪔',txt:`Welcome to the party! The early bird surprise was for check-ins between ${tm(START)} and ${tm(START+M1*6e4)}, but the fun is just getting started 🎶`}};
 
-// Paste your deployed Google Apps Script URL here
-const SU0 = 'https://script.google.com/macros/s/AKfycbwS33q9AA4MJ0meS9n6iIFnJIhLi54ffU1CL8p2Pw19J3u372D12SGHAsMOtXqu3u3GKA/exec';
-const SU = /^https:\/\/script\.google\.com\//.test(SU0) ? SU0 : '';
+async function api(o){const c=new AbortController(),t=setTimeout(()=>c.abort(),9000);try{const r=await fetch(SU+'?'+new URLSearchParams({...o,start:START,test:TEST?1:0,k:KEY}),{signal:c.signal});return await r.json()}finally{clearTimeout(t)}}
+function paint(){document.querySelectorAll('[data-o]').forEach(e=>e.textContent=tm(START+Number(e.dataset.o)*6e4));if(TEST){$('#sub').textContent='🧪 Test mode · party starts '+tm(START);$('#tc').hidden=false}}
+const ids=['countdown','checkin','qr','board'];let cur='countdown';
+function route(){const h=(location.hash||'#countdown').slice(1);cur=ids.includes(h)?h:'countdown';ids.forEach(i=>$('#v-'+i)&&$('#v-'+i).classList.toggle('on',i===cur));document.querySelectorAll('nav a').forEach(a=>{if(a.getAttribute('href')==='#'+cur)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});if(cur==='qr')renderQR();if(cur==='board')loadBoard()}
+addEventListener('hashchange',route);
 
-const qs = new URLSearchParams(location.search);
-const TEST = qs.has('test');
-const M1 = 30, OPEN = 30, K = TEST ? 't_' : '';
-
-const pe = v => {
-  if (!v) return 0;
-  if (/^\d{1,2}:\d{2}$/.test(v)) {
-    return Date.parse(new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Singapore' }).format(new Date()) + 'T' + v.padStart(5, '0') + ':00+08:00') || 0;
+let PAST=null;
+function tick(){
+  const n=Date.now(),d=START-n,g=START+M1*6e4;
+  if((d<=0)!==PAST){PAST=d<=0;renderCI()}
+  if(d>0){
+    const s=Math.floor(d/1e3);
+    $('#D').textContent=pad(Math.floor(s/86400));
+    $('#Hr').textContent=pad(Math.floor(s%86400/3600));
+    $('#M').textContent=pad(Math.floor(s%3600/60));
+    $('#S').textContent=pad(s%60);
+    $('#cmsg').textContent=d<=OPEN*6e4?`Check-in is open! The early bird surprise starts at ${tm(START)} ⏰`:`Check in between ${tm(START)} and ${tm(g)} to claim your early bird surprise 🎁`;
+  }else{
+    ['D','Hr','M','S'].forEach(i=>$('#'+i).textContent='00');
+    $('#cmsg').textContent=n<=g?`Early bird time! ${Math.ceil((g-n)/6e4)} min left to claim your surprise 🎁`:'Welcome! The party is on 🪔';
   }
-  return Date.parse(/[zZ]|[+-]\d\d:?\d\d$/.test(v) ? v : v + '+08:00') || 0;
-};
-
-// Singapore Time: Saturday, 7 Nov 2026, 6:00 PM sharp
-const START0 = pe(qs.get('start')) && TEST ? pe(qs.get('start')) : Date.parse('2026-11-07T18:00:00+08:00');
-let START = START0;
-if (TEST) { const o = ld(K + 'dg_start', 0); if (o) START = o; }
-
-let DEV = ld(K + 'dg_dev', '');
-if (!DEV) { DEV = Math.random().toString(36).slice(2, 12); sv(K + 'dg_dev', DEV); }
-
-const tm = ms => new Intl.DateTimeFormat('en-SG', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: '2-digit', hour12: true }).format(ms).toUpperCase();
-const tms = ms => new Intl.DateTimeFormat('en-SG', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }).format(ms).toUpperCase();
-const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&', '<': '<', '>': '>', '"': '"', "'": ''' }[c]));
-
-const stat = ms => ms < START ? 'early' : ms <= START + M1 * 6e4 ? 'bird' : 'late';
-const res = ms => {
-  const t = stat(ms);
-  return t === 'early' 
-    ? { e: '⏰', txt: `You’re early! Check in again from ${tm(START)} to claim your early bird surprise 🎁` }
-    : t === 'bird'
-    ? { e: '🎉', txt: 'You’re an early bird! Show this screen to the host to claim your surprise 🎁' }
-    : { e: '🪔', txt: `Welcome to the party! The early bird surprise was for check-ins between ${tm(START)} and ${tm(START + M1 * 6e4)}, but the fun is just getting started 🎶` };
-};
-
-async function api(o) {
-  const c = new AbortController(), t = setTimeout(() => c.abort(), 9000);
-  try {
-    const r = await fetch(SU + '?' + new URLSearchParams({ ...o, start: START, test: TEST ? 1 : 0 }), { signal: c.signal });
-    return await r.json();
-  } finally { clearTimeout(t); }
 }
+setInterval(tick,1000);
 
-function paint() {
-  if (TEST) {
-    $('#sub').textContent = '🧪 Test mode · party starts ' + tm(START);
-    $('#tc').hidden = false;
+function renderCI(){
+  const c=ld(K+'dg_ci',null),up=!!c&&c.ts<START&&Date.now()>=START;
+  $('#ciForm').hidden=!!c&&!up;
+  $('#ciRes').hidden=!c||up;
+  $('#ciHint').textContent=up?'You checked in early. Tap below now to claim your early bird surprise 🎁':'';
+  if(c&&!up){
+    const r=res(c.ts);
+    $('#ciBig').textContent=r.e;
+    $('#ciTxt').innerHTML=`<b>${esc(c.name)}</b> checked in at ${tms(c.ts)}<br>${r.txt}`;
+    $('#ciNote').textContent=c.dup?'You were already checked in earlier.':c.warn?'Could not reach the sheet. Show this screen to the host.':'';
   }
 }
 
-const ids = ['countdown', 'checkin', 'qr', 'board'];
-let cur = 'countdown';
-
-function route() {
-  const h = (location.hash || '#countdown').slice(1);
-  cur = ids.includes(h) ? h : 'countdown';
-  ids.forEach(i => {
-    const el = $('#v-' + i);
-    if (el) el.classList.toggle('on', i === cur);
-  });
-  document.querySelectorAll('nav a').forEach(a => {
-    if (a.getAttribute('href') === '#' + cur) a.setAttribute('aria-current', 'page');
-    else a.removeAttribute('aria-current');
-  });
-  if (cur === 'qr') renderQR();
-  if (cur === 'board') loadBoard();
-}
-window.addEventListener('hashchange', route);
-
-let PAST = null;
-function tick() {
-  const n = Date.now(), d = START - n, g = START + M1 * 6e4;
-  if ((d <= 0) !== PAST) { PAST = d <= 0; renderCI(); }
-  if (d > 0) {
-    const s = Math.floor(d / 1e3);
-    $('#D').textContent = pad(Math.floor(s / 86400));
-    $('#Hr').textContent = pad(Math.floor(s % 86400 / 3600));
-    $('#M').textContent = pad(Math.floor(s % 3600 / 60));
-    $('#S').textContent = pad(s % 60);
-    $('#cmsg').textContent = d <= OPEN * 6e4 
-      ? `Check-in is open! The early bird surprise starts at ${tm(START)} ⏰`
-      : `Check in between ${tm(START)} and ${tm(g)} to claim your early bird surprise 🎁`;
-  } else {
-    ['D', 'Hr', 'M', 'S'].forEach(i => $('#' + i).textContent = '00');
-    $('#cmsg').textContent = n <= g 
-      ? `Early bird time! ${Math.ceil((g - n) / 6e4)} min left to claim your surprise 🎁`
-      : 'Welcome! The party is on 🪔';
+$('#nm').value=ld('dg_name','');
+$('#ciBtn').onclick=async()=>{
+  const name=$('#nm').value.trim(),err=$('#ciErr');
+  if(!name){err.textContent='Please type your name first 🙂';return}
+  if(Date.now()<START-OPEN*6e4&&!TEST){err.textContent=`Check-in opens at ${tm(START-OPEN*6e4)}. See you soon!`;return}
+  err.textContent='';
+  const b=$('#ciBtn');
+  b.disabled=true;
+  b.textContent='Checking in…';
+  let rec={name,ts:Date.now()};
+  if(SU){
+    try{
+      const r=await api({action:'checkin',name,dev:DEV});
+      if(r.v!==3){err.textContent='The sheet script is out of date. Please tell the host.';b.disabled=false;b.textContent='Check in now';return}
+      if(!r.ok){err.textContent=r.err==='early'?`Check-in opens at ${tm(START-OPEN*6e4)}. See you soon!`:r.err==='key'?'Please scan the QR code at the door to check in 🙂':r.err==='full'?'The check-in list is full. Please tell the host.':'Something went wrong. Please try again.';b.disabled=false;b.textContent='Check in now';return}
+      rec={name:r.name,ts:r.ts,dup:r.dup};
+    }catch(e){rec.warn=1}
   }
-}
-setInterval(tick, 1000);
-
-function renderCI() {
-  const c = ld(K + 'dg_ci', null), up = !!c && c.ts < START && Date.now() >= START;
-  $('#ciForm').hidden = !!c && !up;
-  $('#ciRes').hidden = !c || up;
-  $('#ciHint').textContent = up ? 'You checked in early. Tap below now to claim your early bird surprise 🎁' : '';
-  if (c && !up) {
-    const r = res(c.ts);
-    $('#ciBig').textContent = r.e;
-    $('#ciTxt').innerHTML = `<b>${esc(c.name)}</b> checked in at ${tms(c.ts)}<br>${r.txt}`;
-    $('#ciNote').textContent = c.dup ? 'You were already checked in earlier.' : c.warn ? 'Could not reach the sheet. Show this screen to the host.' : '';
-  }
-}
-
-$('#nm').value = ld('dg_name', '');
-$('#ciBtn').onclick = async () => {
-  const name = $('#nm').value.trim(), err = $('#ciErr');
-  if (!name) { err.textContent = 'Please type your name first 🙂'; return; }
-  if (Date.now() < START - OPEN * 6e4 && !TEST) {
-    err.textContent = `Check-in opens at ${tm(START - OPEN * 6e4)}. See you soon!`;
-    return;
-  }
-  err.textContent = '';
-  const b = $('#ciBtn');
-  b.disabled = true;
-  b.textContent = 'Checking in…';
-  let rec = { name, ts: Date.now() };
-  if (SU) {
-    try {
-      const r = await api({ action: 'checkin', name, dev: DEV });
-      if (r.v !== 3) {
-        err.textContent = 'The sheet script is out of date. Please tell the host.';
-        b.disabled = false; b.textContent = 'Check in now';
-        return;
-      }
-      if (!r.ok) {
-        err.textContent = r.err === 'early' ? `Check-in opens at ${tm(START - OPEN * 6e4)}. See you soon!` : 'Something went wrong. Please try again.';
-        b.disabled = false; b.textContent = 'Check in now';
-        return;
-      }
-      rec = { name: r.name, ts: r.ts, dup: r.dup };
-    } catch(e) { rec.warn = 1; }
-  }
-  sv('dg_name', name);
-  sv(K + 'dg_ci', rec);
-  b.disabled = false;
-  b.textContent = 'Check in now';
+  sv('dg_name',name);
+  sv(K+'dg_ci',rec);
+  b.disabled=false;
+  b.textContent='Check in now';
   renderCI();
 };
 
-function renderQR() {
-  if (typeof qrcode === 'undefined') return;
-  const u = location.origin + location.pathname + '#checkin';
-  const q = qrcode(4, 'M');
+function renderQR(){
+  if(typeof qrcode==='undefined') return;
+  const b=new URL(location.href.split('#')[0]);
+  if(KEY)b.searchParams.set('k',KEY);
+  const u=b.href+'#checkin',q=qrcode(0,'M');
   q.addData(u);
   q.make();
-  $('#qrbox').innerHTML = q.createSvgTag(4, 2);
+  $('#qrbox').innerHTML=q.createSvgTag({cellSize:4,margin:2,scalable:true});
 }
 
-let rows = [];
-function drawBoard() {
-  const b = rows.filter(e => e.bird).length;
-  $('#bdSum').textContent = rows.length ? `${rows.length} checked in · ${b} early bird${b === 1 ? '' : 's'} 🎁` : '';
-  $('#bd').innerHTML = rows.length 
-    ? rows.map(e => `<li><span>${e.bird ? '🎁' : '✅'}</span><span class="n">${esc(e.name)}<small>${tms(e.ts)}</small></span></li>`).join('')
-    : '<li class="mut">No check-ins yet</li>';
+let rows=[];
+function drawBoard(){
+  const b=rows.filter(e=>e.bird).length;
+  $('#bdSum').textContent=rows.length?`${rows.length} checked in · ${b} early bird${b===1?'':'s'} 🎁`:'';
+  $('#bd').innerHTML=rows.length?rows.map(e=>`<li><span>${e.bird?'🎁':'✅'}</span><span class="n">${esc(e.name)}<small>${tms(e.ts)}</small></span></li>`).join(''):'<li class="mut">No check-ins yet</li>';
 }
 
-async function loadBoard() {
-  const m = $('#bdMsg');
-  if (!SU) { $('#bd').innerHTML = ''; m.textContent = 'The guest list appears once the Google Sheet is connected.'; return; }
-  const pin = $('#hp').value.trim();
-  if (!pin) { m.textContent = 'Enter the host PIN to see the guest list.'; return; }
-  m.textContent = '';
-  try {
-    const r = await api({ action: 'board', pin });
-    if (r.v !== 3) { m.textContent = '⚠️ The sheet script is out of date. Check Code.gs.'; return; }
-    if (!r.ok) { m.textContent = 'Wrong PIN.'; return; }
-    sv('dg_pin', pin);
-    rows = r.rows || [];
+async function loadBoard(){
+  const m=$('#bdMsg');
+  if(!SU){$('#bd').innerHTML='';m.textContent='The guest list appears once the Google Sheet is connected.';return}
+  const pin=$('#hp').value.trim();
+  if(!pin){m.textContent='Enter the host PIN to see the guest list.';return}
+  m.textContent='';
+  try{
+    const r=await api({action:'board',pin});
+    if(r.v!==3){m.textContent='⚠️ The sheet script is out of date. Replace Code.gs and deploy a New version.';return}
+    if(!r.ok){m.textContent=r.err==='locked'?'Too many wrong PINs. Try again in 10 minutes.':'Wrong PIN.';return}
+    sv('dg_pin',pin);
+    rows=r.rows||[];
     drawBoard();
-  } catch(e) { m.textContent = 'Could not load the guest list. Tap refresh again.'; }
+  }catch(e){m.textContent='Could not load the guest list. Tap the button again.'}
 }
 
-$('#bdRef').onclick = loadBoard;
-setInterval(() => { if (cur === 'board' && $('#hp').value.trim()) loadBoard(); }, 20000);
+$('#bdRef').onclick=loadBoard;
+setInterval(()=>{if(cur==='board'&&$('#hp').value.trim())loadBoard()},20000);
 
-document.querySelectorAll('#tc [data-m]').forEach(b => b.onclick = () => {
-  START = Date.now() + Number(b.dataset.m) * 6e4;
-  sv(K + 'dg_start', START);
-  sv(K + 'dg_ci', null);
-  DEV = Math.random().toString(36).slice(2, 12);
-  sv(K + 'dg_dev', DEV);
-  paint(); renderCI(); tick();
+document.querySelectorAll('#tc [data-m]').forEach(b=>b.onclick=()=>{
+  START=Date.now()+Number(b.dataset.m)*6e4;
+  sv(K+'dg_start',START);
+  sv(K+'dg_ci',null);
+  DEV=Math.random().toString(36).slice(2,12);
+  sv(K+'dg_dev',DEV);
+  paint();
+  renderCI();
+  tick();
 });
 
-$('#tcr').onclick = () => {
-  START = START0;
-  sv(K + 'dg_start', 0);
-  sv(K + 'dg_ci', null);
-  paint(); renderCI(); tick();
-};
+$('#tcr').onclick=()=>{START=START0;sv(K+'dg_start',0);sv(K+'dg_ci',null);paint();renderCI();tick()};
+$('#hp').value=ld('dg_pin','');
 
-$('#hp').value = ld('dg_pin', '');
-$('#hAdd').onclick = async () => {
-  const name = $('#hn').value.trim(), pin = $('#hp').value.trim(), m = $('#hMsg');
-  if (!SU) { m.textContent = 'Connect the Google Sheet first.'; return; }
-  if (!name || !pin) { m.textContent = 'Enter the PIN and the guest name.'; return; }
-  const t = $('#htm').value;
-  let ts = Date.now();
-  if (t) ts = Date.parse(new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Singapore' }).format(START) + 'T' + t + ':00+08:00');
-  m.textContent = 'Adding…';
-  try {
-    const r = await api({ action: 'manual', name, pin, ts });
-    if (r.v !== 3) { m.textContent = '⚠️ The sheet script is out of date.'; return; }
-    if (r.ok) {
-      sv('dg_pin', pin);
-      m.textContent = `Added ${r.name}${r.bird ? ' 🎁 (early bird)' : ''} ✅`;
-      $('#hn').value = ''; $('#htm').value = '';
+$('#hAdd').onclick=async()=>{
+  const name=$('#hn').value.trim(),pin=$('#hp').value.trim(),m=$('#hMsg');
+  if(!SU){m.textContent='Connect the Google Sheet first.';return}
+  if(!name||!pin){m.textContent='Enter the PIN and the guest name.';return}
+  const t=$('#htm').value;
+  let ts=Date.now();
+  if(t)ts=Date.parse(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Singapore'}).format(START)+'T'+t+':00+08:00');
+  m.textContent='Adding…';
+  try{
+    const r=await api({action:'manual',name,pin,ts});
+    if(r.v!==3){m.textContent='⚠️ The sheet script is out of date. Replace Code.gs and deploy a New version.';return}
+    if(r.ok){
+      sv('dg_pin',pin);
+      m.textContent=r.dup?`${r.name} is already on the list.`:`Added ${r.name}${r.bird?' 🎁 (early bird)':''} ✅`;
+      $('#hn').value='';
+      $('#htm').value='';
       loadBoard();
-    } else {
-      m.textContent = r.err === 'pin' ? 'Wrong PIN.' : 'Could not add. Try again.';
-    }
-  } catch(e) { m.textContent = 'Could not reach the sheet.'; }
+    }else m.textContent=r.err==='pin'?'Wrong PIN.':r.err==='locked'?'Too many wrong PINs. Try again in 10 minutes.':'Could not add. Try again.';
+  }catch(e){m.textContent='Could not reach the sheet.'}
 };
 
 paint();
