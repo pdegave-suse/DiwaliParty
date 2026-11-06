@@ -129,7 +129,7 @@
     .err { color: var(--bad); font-size: 0.9rem; margin-top: 6px; }
     .success-box { font-size: 1.15rem; line-height: 1.5; }
 
-    /* QR Code Box */
+    /* QR Code Display */
     #qrContainer {
       display: inline-block;
       background: #ffffff;
@@ -163,7 +163,7 @@
       font-weight: 700;
     }
   </style>
-  <!-- Dedicated, stable QR Code engine -->
+  <!-- Reliable QR Code Generator -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
@@ -196,35 +196,45 @@
     <div class="card">
       <h3 style="margin:0 0 8px; color:var(--gold2)">🎁 Early bird surprise</h3>
       <ul class="rules">
-        <li>Check-in window: <b>5:30 PM to 7:00 PM SGT</b>.</li>
-        <li>Check in between <b>5:30 PM and 6:30 PM</b> to claim your <b class="pos">early bird surprise 🎁</b></li>
+        <li>Door check-in window: <b>5:30 PM to 7:00 PM SGT</b>.</li>
+        <li>Check in between <b>5:30 PM and 6:30 PM</b> at the door to claim your <b class="pos">early bird surprise 🎁</b></li>
       </ul>
-      <a class="btn" href="#checkin">I'm here! Check in</a>
+      <a class="btn" href="#checkin">Scan QR at Door to Check In</a>
     </div>
   </section>
 
-  <!-- 2. CHECK-IN WINDOW MENU -->
+  <!-- 2. CHECK-IN WINDOW MENU (ANTI-CHEAT DOOR VALIDATION) -->
   <section id="v-checkin">
-    <!-- State A: Locked (Before 5:30 PM or After 7:00 PM) -->
-    <div class="card" id="ciLockedWrap" style="display:none;">
-      <div style="font-size: 2.8rem; margin-bottom: 6px;">🔒</div>
-      <h3 style="color:var(--gold2); margin-bottom: 8px;">Check-in is Currently Locked</h3>
-      <p class="sub" id="ciLockReason" style="line-height:1.5;">
-        Check-in is only available between <b>5:30 PM and 7:00 PM SGT</b> on Saturday, 7th November 2026.
+    <!-- State 1: Locked because user hasn't scanned door QR -->
+    <div class="card" id="ciDoorRequiredWrap" style="display:none;">
+      <div style="font-size: 2.8rem; margin-bottom: 6px;">🚪</div>
+      <h3 style="color:var(--gold2); margin-bottom: 8px;">Door QR Scan Required</h3>
+      <p class="sub" style="line-height:1.5;">
+        To ensure fair play for the Early Bird gifts, <b>remote check-in from home is disabled</b>.<br><br>
+        Please scan the physical <b>QR Code at our entrance door</b> when you arrive!
       </p>
       <a class="btn alt" href="#countdown">Back to Countdown</a>
     </div>
 
-    <!-- State B: Active Form (During 5:30 PM - 7:00 PM) -->
-    <div class="card" id="ciFormWrap">
-      <h3 style="color:var(--gold2); margin-bottom: 8px;">Welcome! Register Check-in</h3>
-      <p class="sub" style="margin-bottom:14px;">Enter your name to record your arrival.</p>
+    <!-- State 2: Locked because time is before 5:30 PM or after 7:00 PM -->
+    <div class="card" id="ciTimeLockedWrap" style="display:none;">
+      <div style="font-size: 2.8rem; margin-bottom: 6px;">🔒</div>
+      <h3 style="color:var(--gold2); margin-bottom: 8px;">Check-in Window Closed</h3>
+      <p class="sub" id="ciTimeLockReason" style="line-height:1.5;"></p>
+      <a class="btn alt" href="#countdown">Back to Countdown</a>
+    </div>
+
+    <!-- State 3: Active Form (Door QR scanned AND time is between 5:30 PM - 7:00 PM) -->
+    <div class="card" id="ciFormWrap" style="display:none;">
+      <div style="font-size: 2rem; margin-bottom: 6px;">✅</div>
+      <h3 style="color:var(--gold2); margin-bottom: 8px;">Door Verified! Please Check In</h3>
+      <p class="sub" style="margin-bottom:14px;">Enter your name below to register your arrival.</p>
       <input id="guestName" placeholder="Your Full Name / Nickname" maxlength="30" autocomplete="off">
       <button class="btn" id="btnCheckin">Complete Check-in</button>
       <p class="err" id="ciError"></p>
     </div>
 
-    <!-- State C: Success Message -->
+    <!-- State 4: Already Checked In Success View -->
     <div class="card" id="ciResultWrap" style="display:none;">
       <div style="font-size: 3rem; margin-bottom: 8px;" id="ciEmoji">🎉</div>
       <div class="success-box" id="ciSuccessMsg"></div>
@@ -258,7 +268,7 @@
     <div class="card" id="qrGate">
       <div style="font-size: 2.4rem; margin-bottom: 6px;">🔐</div>
       <h3 style="color:var(--gold2); margin-bottom: 8px;">Host Protected Door QR</h3>
-      <p class="sub">Enter the Host PIN to display the door check-in QR code.</p>
+      <p class="sub">Enter your Host PIN to reveal the official door check-in QR code.</p>
       <input id="qrPinInput" type="password" placeholder="Enter Host PIN" autocomplete="off">
       <button class="btn" id="btnUnlockQR">Reveal QR Code</button>
       <p class="err" id="qrPinError"></p>
@@ -266,9 +276,9 @@
 
     <div class="card" id="qrDisplay" style="display:none;">
       <h3 style="color:var(--gold2); margin-bottom: 8px;">Door Check-in QR</h3>
-      <p class="sub" style="margin-bottom: 12px;">Display this at the door. When guests scan it, they will be taken straight to the check-in page.</p>
+      <p class="sub" style="margin-bottom: 12px;">Display this at your door. Scanning this QR grants guests physical presence verification.</p>
       <div id="qrContainer"></div>
-      <p class="sub" id="qrTargetUrl" style="margin-top:10px; font-size:0.8rem; word-break:break-all;"></p>
+      <p class="sub" id="qrTargetUrl" style="margin-top:10px; font-size:0.75rem; word-break:break-all;"></p>
       <button class="btn alt" onclick="lockQR()">Lock QR Code</button>
     </div>
   </section>
@@ -276,10 +286,10 @@
 
 <script>
   // 1. CONFIGURATION
-  // Google Apps Script Web App URL:
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2k7dX6r76ceV9w-6yveKgVEvNue5mFVVLiAfJ4UNzjiczgAHY08N4hvG0Ls0-vJ0lew/exec";
+  const DOOR_SECRET_KEY = "diwali2026punggol"; // Anti-cheat secret token embedded in door QR
 
-  // Check-in Window: Nov 7, 2026 Singapore Time (UTC+8)
+  // Timeline (Singapore Time: UTC+8)
   const T_WINDOW_OPEN  = new Date("2026-11-07T17:30:00+08:00").getTime(); // 5:30 PM SGT
   const T_WINDOW_CLOSE = new Date("2026-11-07T19:00:00+08:00").getTime(); // 7:00 PM SGT
   const T_START        = new Date("2026-11-07T18:00:00+08:00").getTime(); // 6:00 PM SGT
@@ -295,11 +305,21 @@
     return now >= T_WINDOW_OPEN && now <= T_WINDOW_CLOSE;
   }
 
-  // Device identifier
+  // Device fingerprint
   let devId = localStorage.getItem("dg_dev_id");
   if (!devId) {
     devId = Math.random().toString(36).substring(2, 10);
     localStorage.setItem("dg_dev_id", devId);
+  }
+
+  // Check URL query parameters for Door QR token (e.g., ?door=diwali2026punggol)
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("door") === DOOR_SECRET_KEY) {
+    sessionStorage.setItem("dg_door_verified", "true");
+  }
+
+  function isDoorVerified() {
+    return sessionStorage.getItem("dg_door_verified") === "true";
   }
 
   // 2. ROUTING & TABS
@@ -336,9 +356,9 @@
       $("S").textContent = pad(s % 60);
 
       if (now >= T_WINDOW_OPEN) {
-        $("cmsg").textContent = "Check-in is now OPEN at the door! Early bird surprise ends at 6:30 PM.";
+        $("cmsg").textContent = "Door Check-in is now OPEN! Scan the QR at the door.";
       } else {
-        $("cmsg").textContent = "Check-in opens at 5:30 PM. Party begins at 6:00 PM sharp!";
+        $("cmsg").textContent = "Check-in opens at 5:30 PM SGT at the door.";
       }
     } else if (now >= T_START && now <= T_PARTY_END) {
       $("timerTitle").textContent = "Party In Progress! 🪔";
@@ -353,9 +373,9 @@
         const minsLeft = Math.ceil((T_EARLY_END - now) / 60000);
         $("cmsg").textContent = `🎁 Early Bird active! ${minsLeft} min left to claim your surprise!`;
       } else if (now <= T_WINDOW_CLOSE) {
-        $("cmsg").textContent = "Check-in is open until 7:00 PM SGT.";
+        $("cmsg").textContent = "Check-in window is open until 7:00 PM SGT.";
       } else {
-        $("cmsg").textContent = "Check-in closed at 7:00 PM. Enjoy the rest of the party!";
+        $("cmsg").textContent = "Check-in closed at 7:00 PM. Enjoy the party!";
       }
     } else {
       $("timerTitle").textContent = "Party Ended";
@@ -371,37 +391,46 @@
   setInterval(updateTimer, 1000);
   updateTimer();
 
-  // 4. CHECK-IN CONTROLLER (Guarded 5:30 PM - 7:00 PM)
+  // 4. CHECK-IN CONTROLLER (Guards: Door QR token + Time window)
   function evaluateCheckinState() {
-    const lockedWrap = $("ciLockedWrap");
+    const doorReqWrap = $("ciDoorRequiredWrap");
+    const timeLockWrap = $("ciTimeLockedWrap");
     const formWrap = $("ciFormWrap");
     const resultWrap = $("ciResultWrap");
     const savedUser = localStorage.getItem("dg_checked_guest");
 
-    // Guard: Window check
-    if (!isCheckinWindowOpen()) {
-      lockedWrap.style.display = "block";
-      formWrap.style.display = "none";
-      resultWrap.style.display = "none";
+    // Hide all panels by default
+    doorReqWrap.style.display = "none";
+    timeLockWrap.style.display = "none";
+    formWrap.style.display = "none";
+    resultWrap.style.display = "none";
 
+    // Check if user has already checked in
+    if (savedUser) {
+      resultWrap.style.display = "block";
+      return;
+    }
+
+    // CHECK 1: Must have scanned the Door QR code
+    if (!isDoorVerified()) {
+      doorReqWrap.style.display = "block";
+      return;
+    }
+
+    // CHECK 2: Must be within 5:30 PM to 7:00 PM SGT
+    if (!isCheckinWindowOpen()) {
+      timeLockWrap.style.display = "block";
       const now = Date.now();
       if (now < T_WINDOW_OPEN) {
-        $("ciLockReason").innerHTML = "Check-in will strictly open at <b>5:30 PM SGT</b>.<br>Please scan the door QR code once you arrive!";
+        $("ciTimeLockReason").innerHTML = "You scanned the door QR, but check-in strictly opens at <b>5:30 PM SGT</b>.<br>Please wait a moment!";
       } else {
-        $("ciLockReason").innerHTML = "Self check-in closed at <b>7:00 PM SGT</b>.<br>If you just arrived, please speak to the host to check you in!";
+        $("ciTimeLockReason").innerHTML = "Self check-in closed at <b>7:00 PM SGT</b>.<br>Please see the host to be checked in manually!";
       }
       return;
     }
 
-    // Window is OPEN
-    lockedWrap.style.display = "none";
-    if (savedUser) {
-      formWrap.style.display = "none";
-      resultWrap.style.display = "block";
-    } else {
-      formWrap.style.display = "block";
-      resultWrap.style.display = "none";
-    }
+    // Passed both checks: Show check-in form
+    formWrap.style.display = "block";
   }
 
   function resetMyCheckin() {
@@ -410,9 +439,14 @@
   }
 
   $("btnCheckin").onclick = async () => {
-    // Immediate verification of 5:30 PM - 7:00 PM window
+    if (!isDoorVerified()) {
+      alert("Door scan required! Please scan the QR code at our door.");
+      evaluateCheckinState();
+      return;
+    }
+
     if (!isCheckinWindowOpen()) {
-      alert("Check-in is strictly allowed between 5:30 PM and 7:00 PM SGT only.");
+      alert("Check-in is only allowed between 5:30 PM and 7:00 PM SGT.");
       evaluateCheckinState();
       return;
     }
@@ -434,7 +468,7 @@
     const isEarly = now >= T_WINDOW_OPEN && now <= T_EARLY_END;
 
     try {
-      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=checkin&name=${encodeURIComponent(name)}&dev=${devId}`);
+      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=checkin&name=${encodeURIComponent(name)}&dev=${devId}&doorKey=${DOOR_SECRET_KEY}`);
       const data = await res.json();
 
       if (data.ok) {
@@ -447,13 +481,12 @@
           $("ciSuccessMsg").innerHTML = `<b>Welcome ${data.name}!</b><br><span style="color:var(--ok); font-weight:bold;">🎉 Congratulations! You won the Early Bird Surprise Gift!</span><br>Show this confirmation to the host to claim it.`;
         } else {
           $("ciEmoji").textContent = "🪔";
-          $("ciSuccessMsg").innerHTML = `<b>Welcome ${data.name}!</b><br>You are successfully checked in. Have a wonderful time at the party!`;
+          $("ciSuccessMsg").innerHTML = `<b>Welcome ${data.name}!</b><br>You are successfully checked in. Enjoy the Diwali party!`;
         }
       } else {
         err.textContent = data.err || "Check-in could not be completed. Please retry.";
       }
     } catch (e) {
-      // Local fallback if sheet is unreachable
       localStorage.setItem("dg_checked_guest", name);
       $("ciFormWrap").style.display = "none";
       $("ciResultWrap").style.display = "block";
@@ -504,7 +537,7 @@
         });
       }
     } catch (e) {
-      summary.textContent = "Unable to fetch online status. Check connection.";
+      summary.textContent = "Unable to fetch online status. Check network connection.";
     }
   }
 
@@ -559,15 +592,15 @@
         $("qrGate").style.display = "none";
         $("qrDisplay").style.display = "block";
 
-        // URL redirecting directly to the Check-in tab
-        const checkinUrl = window.location.origin + window.location.pathname + "#checkin";
-        $("qrTargetUrl").textContent = checkinUrl;
+        // Embed the secret door key into the QR code URL
+        const checkinUrlWithDoorKey = `${window.location.origin}${window.location.pathname}?door=${DOOR_SECRET_KEY}#checkin`;
+        $("qrTargetUrl").textContent = checkinUrlWithDoorKey;
 
-        // Render QR
+        // Render QR Code using qrcode.js
         const container = $("qrContainer");
         container.innerHTML = "";
         new QRCode(container, {
-          text: checkinUrl,
+          text: checkinUrlWithDoorKey,
           width: 220,
           height: 220,
           colorDark: "#000000",
