@@ -1,5 +1,7 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="en">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Degave Diwali Countdown & Check-in</title>
 <style>
@@ -13,7 +15,8 @@ h1{font-family:Georgia,"Times New Roman",serif;font-size:1.7rem;margin:6px 0 2px
 nav{display:flex;gap:6px;margin:0 0 16px}
 nav a{flex:1;padding:10px 4px;border-radius:12px;border:1px solid var(--line);color:var(--txt);text-decoration:none;font-size:.9rem;background:var(--card)}
 nav a[aria-current=page]{background:var(--gold);color:#2a1200;font-weight:700}
-section{display:none}section.on{display:block}
+section{display:none}
+section.on{display:block}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0 0 14px}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .box{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:14px;padding:12px 2px}
@@ -30,893 +33,343 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 #qrbox svg{width:100%;height:auto;display:block}
 ol{list-style:none;margin:0;padding:0;text-align:left}
 li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
-li .n{flex:1}li small{display:block;color:var(--mut)}
+li .n{flex:1}
+li small{display:block;color:var(--mut)}
 li button{background:none;border:0;color:var(--mut);font-size:1.3rem;cursor:pointer}
-.pos{color:var(--ok)}.neg{color:var(--bad)}.mut{color:var(--mut);justify-content:center}
-.row{display:flex;gap:8px}.row input{margin:0}
-label{color:var(--mut);font-size:.9rem;display:flex;gap:8px;align-items:center;justify-content:center;margin-top:10px}
-label input{width:auto;margin:0}
-
-[hidden]{display:none!important}.row .btn{margin:0}.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g2 .btn{margin:0;font-size:.9rem;padding:12px 6px}
+.pos{color:var(--ok)}
+.neg{color:var(--bad)}
+.mut{color:var(--mut);justify-content:center}
+.row{display:flex;gap:8px}
+.row input{margin:0}
+[hidden]{display:none!important}
 .warn{color:#ffd27a;font-size:.9rem}
-</style></head>
-<body><main>
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g2 .btn{margin:0;font-size:.9rem;padding:12px 6px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+</head>
+<body>
+<main>
 <div class="big">🪔</div>
 <h1>Degave Family Diwali Party</h1>
 <p class="sub" id="sub">Saturday, 7th November 2026 · 6 PM sharp · Punggol</p>
+
 <nav>
-  <a href="#countdown">⏳ Countdown</a>
+  <a href="#countdown" aria-current="page">⏳ Countdown</a>
   <a href="#checkin">✅ Check in</a>
   <a href="#board">🏆 Board</a>
 </nav>
 
-<section id="v-countdown">
- <div class="card"><div class="grid">
-  <div class="box"><b id="D">--</b><small>Days</small></div><div class="box"><b id="Hr">--</b><small>Hours</small></div>
-  <div class="box"><b id="M">--</b><small>Mins</small></div><div class="box"><b id="S">--</b><small>Secs</small></div></div>
-  <p id="cmsg"></p></div>
- <div class="card"><h3 style="margin:0 0 8px;color:var(--gold2)">🎁 Early bird surprise</h3>
-  <ul class="rules" style="list-style:disc">
-    <li style="display:list-item;border:0;padding:0">Scan the QR code at the door to check in.</li>
-    <li style="display:list-item;border:0;padding:0">Check-in between <b class="pos">6:00 PM and 6:30 PM SGT</b> to claim your <b class="pos">early bird surprise 🎁</b></li>
-    <li style="display:list-item;border:0;padding:0">Checked in after 6:30 PM? Welcome to the party! The fun is just getting started 🎶</li>
-  </ul></div>
- <a class="btn" href="#checkin">I’m here! Check in</a>
- <div class="card" id="tc" hidden style="margin-top:14px"><h3 style="margin:0 0 6px;color:var(--gold2)">🧪 Lab test controls</h3>
-  <p class="sub" style="margin:0 0 10px">Moves the party start so you can test. Also clears this phone’s check-in.</p>
-  <div class="g2"><button class="btn alt" data-m="1">Starts in 1 min</button><button class="btn alt" data-m="-10">Started 10 min ago (early bird)</button><button class="btn alt" data-m="-40">Started 40 min ago (too late)</button></div>
-  <button class="btn alt" id="tcr">Reset to real party time</button></div>
+<!-- COUNTDOWN SECTION: starts with class="on" so it is visible immediately -->
+<section id="v-countdown" class="on">
+  <div class="card">
+    <div class="grid">
+      <div class="box"><b id="D">--</b><small>Days</small></div>
+      <div class="box"><b id="Hr">--</b><small>Hours</small></div>
+      <div class="box"><b id="M">--</b><small>Mins</small></div>
+      <div class="box"><b id="S">--</b><small>Secs</small></div>
+    </div>
+    <p id="cmsg">Arrive between 6:00 PM and 6:30 PM to claim your surprise!</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin:0 0 8px;color:var(--gold2)">🎁 Early bird surprise</h3>
+    <ul class="rules" style="list-style:disc">
+      <li style="display:list-item;border:0;padding:0">Scan the QR at the door and check in.</li>
+      <li style="display:list-item;border:0;padding:0">Between <b class="pos">6:00 PM and 6:30 PM</b>: claim your <b class="pos">early bird surprise 🎁</b></li>
+      <li style="display:list-item;border:0;padding:0">Checked in after 6:30 PM? Welcome to the party! The fun is just getting started 🎶</li>
+      <li style="display:list-item;border:0;padding:0">Checked in before 6:00 PM? Please check in again from 6:00 PM to claim it.</li>
+    </ul>
+  </div>
+
+  <a class="btn" href="#checkin">I’m here! Check in</a>
+
+  <div class="card" id="tc" hidden style="margin-top:14px">
+    <h3 style="margin:0 0 6px;color:var(--gold2)">🧪 Lab test controls</h3>
+    <p class="sub" style="margin:0 0 10px">Moves the party start so you can test. Also clears this phone’s check-in.</p>
+    <div class="g2">
+      <button class="btn alt" data-m="1">Starts in 1 min</button>
+      <button class="btn alt" data-m="-10">Started 10 min ago (early bird)</button>
+      <button class="btn alt" data-m="-40">Started 40 min ago (too late)</button>
+    </div>
+    <button class="btn alt" id="tcr">Reset to real party time</button>
+  </div>
 </section>
 
+<!-- CHECKIN SECTION -->
 <section id="v-checkin">
- <div class="card" id="ciForm"><h3 style="margin:0 0 10px;color:var(--gold2)">Welcome! Check in to score</h3><p class="warn" id="ciHint" style="margin:0 0 10px"></p>
-  <input id="nm" placeholder="Your name" maxlength="30" autocomplete="name">
-  <button class="btn" id="ciBtn">Check in now</button><p class="err" id="ciErr"></p></div>
- <div class="card" id="ciRes" hidden><div class="big" id="ciBig"></div><p id="ciTxt" style="font-size:1.2rem"></p><p class="warn" id="ciNote"></p></div>
+  <div class="card" id="ciForm">
+    <h3 style="margin:0 0 10px;color:var(--gold2)">Welcome! Check in to score</h3>
+    <p class="warn" id="ciHint" style="margin:0 0 10px"></p>
+    <input id="nm" placeholder="Your name" maxlength="30" autocomplete="name">
+    <button class="btn" id="ciBtn">Check in now</button>
+    <p class="err" id="ciErr"></p>
+  </div>
+  <div class="card" id="ciRes" hidden>
+    <div class="big" id="ciBig"></div>
+    <p id="ciTxt" style="font-size:1.2rem"></p>
+    <p class="warn" id="ciNote"></p>
+  </div>
 </section>
 
+<!-- QR CODE SECTION -->
 <section id="v-qr">
- <div class="card"><h3 style="margin:0 0 8px;color:var(--gold2)">Scan to check in</h3>
-  <div id="qrbox"></div>
-  <p class="warn" id="clnote" hidden>Host index.html on a public site (GitHub Pages) and open that link to get the guest QR.</p></div>
+  <div class="card">
+    <h3 style="margin:0 0 8px;color:var(--gold2)">Scan to check in</h3>
+    <div id="qrbox"></div>
+  </div>
 </section>
 
+<!-- BOARD SECTION -->
 <section id="v-board">
- <div class="card"><h3 style="margin:0 0 10px;color:var(--gold2)">👑 Host: live guest list</h3>
-  <input id="hp" type="password" placeholder="Host PIN (e.g. 1234)" autocomplete="off">
-  <button class="btn" id="bdRef">Refresh guest list</button>
-  <p class="sub" id="bdSum" style="margin:10px 0 0"></p><ol id="bd"></ol><p class="sub" id="bdMsg"></p></div>
- <div class="card"><h3 style="margin:0 0 10px;color:var(--gold2)">Add a guest manually</h3>
-  <input id="hn" placeholder="Guest name" maxlength="30"><input id="htm" type="time" aria-label="Arrival time (Singapore)">
-  <p class="sub" style="margin:0 0 6px">Leave the time empty to use the time right now.</p>
-  <button class="btn" id="hAdd">Add guest</button><p class="sub" id="hMsg"></p></div>
+  <div class="card">
+    <h3 style="margin:0 0 10px;color:var(--gold2)">👑 Host: live guest list</h3>
+    <input id="hp" type="password" placeholder="Host PIN (e.g. 1234)" autocomplete="off">
+    <button class="btn" id="bdRef">Refresh guest list</button>
+    <p class="sub" id="bdSum" style="margin:10px 0 0"></p>
+    <ol id="bd"></ol>
+    <p class="sub" id="bdMsg"></p>
+  </div>
+  <div class="card">
+    <h3 style="margin:0 0 10px;color:var(--gold2)">Add a guest manually</h3>
+    <input id="hn" placeholder="Guest name" maxlength="30">
+    <input id="htm" type="time" aria-label="Arrival time (Singapore)">
+    <p class="sub" style="margin:0 6px">Leave the time empty to use the time right now.</p>
+    <button class="btn" id="hAdd">Add guest</button>
+    <p class="sub" id="hMsg"></p>
+  </div>
 </section>
 </main>
-<script>//---------------------------------------------------------------------
-//
-// QR Code Generator for JavaScript
-//
-// Copyright (c) 2009 Kazuhiko Arase
-//
-// URL: http://www.d-project.com/
-//
-// Licensed under the MIT license:
-//  http://www.opensource.org/licenses/mit-license.php
-//
-// The word 'QR Code' is registered trademark of
-// DENSO WAVE INCORPORATED
-//  http://www.denso-wave.com/qrcode/faqpatent-e.html
-//
-//---------------------------------------------------------------------
 
-var qrcode = function() {
-
-  var qrcode = function(typeNumber, errorCorrectionLevel) {
-
-    var PAD0 = 0xEC;
-    var PAD1 = 0x11;
-
-    var _typeNumber = typeNumber;
-    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
-    var _modules = null;
-    var _moduleCount = 0;
-    var _dataCache = null;
-    var _dataList = [];
-
-    var _this = {};
-
-    var makeImpl = function(test, maskPattern) {
-
-      _moduleCount = _typeNumber * 4 + 17;
-      _modules = function(moduleCount) {
-        var modules = new Array(moduleCount);
-        for (var row = 0; row < moduleCount; row += 1) {
-          modules[row] = new Array(moduleCount);
-          for (var col = 0; col < moduleCount; col += 1) {
-            modules[row][col] = null;
-          }
-        }
-        return modules;
-      }(_moduleCount);
-
-      setupPositionProbePattern(0, 0);
-      setupPositionProbePattern(_moduleCount - 7, 0);
-      setupPositionProbePattern(0, _moduleCount - 7);
-      setupPositionAdjustPattern();
-      setupTimingPattern();
-      setupTypeInfo(test, maskPattern);
-
-      if (_typeNumber >= 7) {
-        setupTypeNumber(test);
-      }
-
-      if (_dataCache == null) {
-        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
-      }
-
-      mapData(_dataCache, maskPattern);
-    };
-
-    var setupPositionProbePattern = function(row, col) {
-
-      for (var r = -1; r <= 7; r += 1) {
-
-        if (row + r <= -1 || _moduleCount <= row + r) continue;
-
-        for (var c = -1; c <= 7; c += 1) {
-
-          if (col + c <= -1 || _moduleCount <= col + c) continue;
-
-          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
-              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
-              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
-            _modules[row + r][col + c] = true;
-          } else {
-            _modules[row + r][col + c] = false;
-          }
-        }
-      }
-    };
-
-    var getBestMaskPattern = function() {
-
-      var minLostPoint = 0;
-      var pattern = 0;
-
-      for (var i = 0; i < 8; i += 1) {
-
-        makeImpl(true, i);
-
-        var lostPoint = QRUtil.getLostPoint(_this);
-
-        if (i == 0 || minLostPoint > lostPoint) {
-          minLostPoint = lostPoint;
-          pattern = i;
-        }
-      }
-
-      return pattern;
-    };
-
-    var setupTimingPattern = function() {
-
-      for (var r = 8; r < _moduleCount - 8; r += 1) {
-        if (_modules[r][6] != null) {
-          continue;
-        }
-        _modules[r][6] = (r % 2 == 0);
-      }
-
-      for (var c = 8; c < _moduleCount - 8; c += 1) {
-        if (_modules[6][c] != null) {
-          continue;
-        }
-        _modules[6][c] = (c % 2 == 0);
-      }
-    };
-
-    var setupPositionAdjustPattern = function() {
-
-      var pos = QRUtil.getPatternPosition(_typeNumber);
-
-      for (var i = 0; i < pos.length; i += 1) {
-
-        for (var j = 0; j < pos.length; j += 1) {
-
-          var row = pos[i];
-          var col = pos[j];
-
-          if (_modules[row][col] != null) {
-            continue;
-          }
-
-          for (var r = -2; r <= 2; r += 1) {
-
-            for (var c = -2; c <= 2; c += 1) {
-
-              if (r == -2 || r == 2 || c == -2 || c == 2
-                  || (r == 0 && c == 0) ) {
-                _modules[row + r][col + c] = true;
-              } else {
-                _modules[row + r][col + c] = false;
-              }
-            }
-          }
-        }
-      }
-    };
-
-    var setupTypeNumber = function(test) {
-
-      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
-
-      for (var i = 0; i < 18; i += 1) {
-        var mod = (!test && ( (bits >> i) & 1) == 1);
-        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
-      }
-
-      for (var i = 0; i < 18; i += 1) {
-        var mod = (!test && ( (bits >> i) & 1) == 1);
-        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
-      }
-    };
-
-    var setupTypeInfo = function(test, maskPattern) {
-
-      var data = (_errorCorrectionLevel << 3) | maskPattern;
-      var bits = QRUtil.getBCHTypeInfo(data);
-
-      for (var i = 0; i < 15; i += 1) {
-
-        var mod = (!test && ( (bits >> i) & 1) == 1);
-
-        if (i < 6) {
-          _modules[i][8] = mod;
-        } else if (i < 8) {
-          _modules[i + 1][8] = mod;
-        } else {
-          _modules[_moduleCount - 15 + i][8] = mod;
-        }
-      }
-
-      for (var i = 0; i < 15; i += 1) {
-
-        var mod = (!test && ( (bits >> i) & 1) == 1);
-
-        if (i < 8) {
-          _modules[8][_moduleCount - i - 1] = mod;
-        } else if (i < 9) {
-          _modules[8][15 - i - 1 + 1] = mod;
-        } else {
-          _modules[8][15 - i - 1] = mod;
-        }
-      }
-
-      _modules[_moduleCount - 8][8] = (!test);
-    };
-
-    var mapData = function(data, maskPattern) {
-
-      var inc = -1;
-      var row = _moduleCount - 1;
-      var bitIndex = 7;
-      var byteIndex = 0;
-      var maskFunc = QRUtil.getMaskFunction(maskPattern);
-
-      for (var col = _moduleCount - 1; col > 0; col -= 2) {
-
-        if (col == 6) col -= 1;
-
-        while (true) {
-
-          for (var c = 0; c < 2; c += 1) {
-
-            if (_modules[row][col - c] == null) {
-
-              var dark = false;
-
-              if (byteIndex < data.length) {
-                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
-              }
-
-              var mask = maskFunc(row, col - c);
-
-              if (mask) {
-                dark = !dark;
-              }
-
-              _modules[row][col - c] = dark;
-              bitIndex -= 1;
-
-              if (bitIndex == -1) {
-                byteIndex += 1;
-                bitIndex = 7;
-              }
-            }
-          }
-
-          row += inc;
-
-          if (row < 0 || _moduleCount <= row) {
-            row -= inc;
-            inc = -inc;
-            break;
-          }
-        }
-      }
-    };
-
-    var createBytes = function(buffer, rsBlocks) {
-
-      var offset = 0;
-
-      var maxDcCount = 0;
-      var maxEcCount = 0;
-
-      var dcdata = new Array(rsBlocks.length);
-      var ecdata = new Array(rsBlocks.length);
-
-      for (var r = 0; r < rsBlocks.length; r += 1) {
-
-        var dcCount = rsBlocks[r].dataCount;
-        var ecCount = rsBlocks[r].totalCount - dcCount;
-
-        maxDcCount = Math.max(maxDcCount, dcCount);
-        maxEcCount = Math.max(maxEcCount, ecCount);
-
-        dcdata[r] = new Array(dcCount);
-
-        for (var i = 0; i < dcdata[r].length; i += 1) {
-          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
-        }
-        offset += dcCount;
-
-        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
-        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
-
-        var modPoly = rawPoly.mod(rsPoly);
-        ecdata[r] = new Array(rsPoly.getLength() - 1);
-        for (var i = 0; i < ecdata[r].length; i += 1) {
-          var modIndex = i + modPoly.getLength() - ecdata[r].length;
-          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
-        }
-      }
-
-      var totalCodeCount = 0;
-      for (var i = 0; i < rsBlocks.length; i += 1) {
-        totalCodeCount += rsBlocks[i].totalCount;
-      }
-
-      var data = new Array(totalCodeCount);
-      var index = 0;
-
-      for (var i = 0; i < maxDcCount; i += 1) {
-        for (var r = 0; r < rsBlocks.length; r += 1) {
-          if (i < dcdata[r].length) {
-            data[index] = dcdata[r][i];
-            index += 1;
-          }
-        }
-      }
-
-      for (var i = 0; i < maxEcCount; i += 1) {
-        for (var r = 0; r < rsBlocks.length; r += 1) {
-          if (i < ecdata[r].length) {
-            data[index] = ecdata[r][i];
-            index += 1;
-          }
-        }
-      }
-
-      return data;
-    };
-
-    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
-
-      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
-
-      var buffer = qrBitBuffer();
-
-      for (var i = 0; i < dataList.length; i += 1) {
-        var data = dataList[i];
-        buffer.put(data.getMode(), 4);
-        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
-        data.write(buffer);
-      }
-
-      var totalDataCount = 0;
-      for (var i = 0; i < rsBlocks.length; i += 1) {
-        totalDataCount += rsBlocks[i].dataCount;
-      }
-
-      if (buffer.getLengthInBits() > totalDataCount * 8) {
-        throw 'code length overflow. ('
-          + buffer.getLengthInBits()
-          + '>'
-          + totalDataCount * 8
-          + ')';
-      }
-
-      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
-        buffer.put(0, 4);
-      }
-
-      while (buffer.getLengthInBits() % 8 != 0) {
-        buffer.putBit(false);
-      }
-
-      while (true) {
-
-        if (buffer.getLengthInBits() >= totalDataCount * 8) {
-          break;
-        }
-        buffer.put(PAD0, 8);
-
-        if (buffer.getLengthInBits() >= totalDataCount * 8) {
-          break;
-        }
-        buffer.put(PAD1, 8);
-      }
-
-      return createBytes(buffer, rsBlocks);
-    };
-
-    _this.addData = function(data, mode) {
-
-      mode = mode || 'Byte';
-
-      var newData = null;
-
-      switch(mode) {
-      case 'Byte' :
-        newData = qr8BitByte(data);
-        break;
-      default :
-        newData = qr8BitByte(data);
-      }
-
-      _dataList.push(newData);
-      _dataCache = null;
-    };
-
-    _this.isDark = function(row, col) {
-      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
-        throw row + ',' + col;
-      }
-      return _modules[row][col];
-    };
-
-    _this.getModuleCount = function() {
-      return _moduleCount;
-    };
-
-    _this.make = function() {
-      makeImpl(false, getBestMaskPattern() );
-    };
-
-    _this.createSvgTag = function(cellSize, margin) {
-      cellSize = cellSize || 2;
-      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
-      var size = _this.getModuleCount() * cellSize + margin * 2;
-      var qrSvg = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + size + ' ' + size + '" preserveAspectRatio="xMinYMin meet">';
-      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/><path d="';
-      for (var r = 0; r < _this.getModuleCount(); r += 1) {
-        var mr = r * cellSize + margin;
-        for (var c = 0; c < _this.getModuleCount(); c += 1) {
-          if (_this.isDark(r, c) ) {
-            var mc = c * cellSize + margin;
-            qrSvg += 'M' + mc + ',' + mr + 'l' + cellSize + ',0 0,' + cellSize + ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
-          }
-        }
-      }
-      qrSvg += '" stroke="transparent" fill="black"/></svg>';
-      return qrSvg;
-    };
-
-    return _this;
-  };
-
-  var QRErrorCorrectionLevel = { L : 1, M : 0, Q : 3, H : 2 };
-
-  var QRUtil = function() {
-    var PATTERN_POSITION_TABLE = [
-      [],[6, 18],[6, 22],[6, 26],[6, 30],[6, 34],[6, 22, 38],[6, 24, 42],[6, 26, 46],[6, 28, 50],
-      [6, 30, 54],[6, 32, 58],[6, 34, 62],[6, 26, 46, 66],[6, 26, 48, 70],[6, 26, 50, 74],[6, 30, 54, 78],
-      [6, 30, 56, 82],[6, 30, 58, 86],[6, 34, 62, 90],[6, 28, 50, 72, 94],[6, 26, 50, 74, 98],[6, 30, 54, 78, 102],
-      [6, 28, 54, 80, 106],[6, 32, 58, 84, 110],[6, 30, 58, 86, 114],[6, 34, 62, 90, 118],[6, 26, 50, 74, 98, 122],
-      [6, 30, 54, 78, 102, 126],[6, 26, 52, 78, 104, 130],[6, 30, 56, 82, 108, 134],[6, 34, 60, 86, 112, 138],
-      [6, 30, 58, 86, 114, 142],[6, 34, 62, 90, 118, 146],[6, 30, 54, 78, 102, 126, 150],[6, 24, 50, 76, 102, 128, 154],
-      [6, 28, 54, 80, 106, 132, 158],[6, 32, 58, 84, 110, 136, 162],[6, 26, 54, 82, 110, 138, 166],[6, 30, 58, 86, 114, 142, 170]
-    ];
-    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
-    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
-    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
-
-    var _this = {};
-
-    var getBCHDigit = function(data) {
-      var digit = 0;
-      while (data != 0) { digit += 1; data >>>= 1; }
-      return digit;
-    };
-
-    _this.getBCHTypeInfo = function(data) {
-      var d = data << 10;
-      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
-        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
-      }
-      return ( (data << 10) | d) ^ G15_MASK;
-    };
-
-    _this.getBCHTypeNumber = function(data) {
-      var d = data << 12;
-      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
-        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
-      }
-      return (data << 12) | d;
-    };
-
-    _this.getPatternPosition = function(typeNumber) {
-      return PATTERN_POSITION_TABLE[typeNumber - 1];
-    };
-
-    _this.getMaskFunction = function(maskPattern) {
-      switch (maskPattern) {
-      case 0: return function(i, j) { return (i + j) % 2 == 0; };
-      case 1: return function(i, j) { return i % 2 == 0; };
-      case 2: return function(i, j) { return j % 3 == 0; };
-      case 3: return function(i, j) { return (i + j) % 3 == 0; };
-      case 4: return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
-      case 5: return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
-      case 6: return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
-      case 7: return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
-      default: throw 'bad maskPattern:' + maskPattern;
-      }
-    };
-
-    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
-      var a = qrPolynomial([1], 0);
-      for (var i = 0; i < errorCorrectLength; i += 1) {
-        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
-      }
-      return a;
-    };
-
-    _this.getLengthInBits = function(mode, type) {
-      return 16;
-    };
-
-    _this.getLostPoint = function(qrcode) {
-      var moduleCount = qrcode.getModuleCount();
-      var lostPoint = 0;
-      for (var row = 0; row < moduleCount; row += 1) {
-        for (var col = 0; col < moduleCount; col += 1) {
-          var sameCount = 0;
-          var dark = qrcode.isDark(row, col);
-          for (var r = -1; r <= 1; r += 1) {
-            if (row + r < 0 || moduleCount <= row + r) continue;
-            for (var c = -1; c <= 1; c += 1) {
-              if (col + c < 0 || moduleCount <= col + c) continue;
-              if (r == 0 && c == 0) continue;
-              if (dark == qrcode.isDark(row + r, col + c) ) sameCount += 1;
-            }
-          }
-          if (sameCount > 5) lostPoint += (3 + sameCount - 5);
-        }
-      }
-      return lostPoint;
-    };
-
-    return _this;
-  }();
-
-  var QRMath = function() {
-    var EXP_TABLE = new Array(256);
-    var LOG_TABLE = new Array(256);
-    for (var i = 0; i < 8; i += 1) EXP_TABLE[i] = 1 << i;
-    for (var i = 8; i < 256; i += 1) EXP_TABLE[i] = EXP_TABLE[i - 4] ^ EXP_TABLE[i - 5] ^ EXP_TABLE[i - 6] ^ EXP_TABLE[i - 8];
-    for (var i = 0; i < 255; i += 1) LOG_TABLE[EXP_TABLE[i] ] = i;
-    var _this = {};
-    _this.glog = function(n) { return LOG_TABLE[n]; };
-    _this.gexp = function(n) {
-      while (n < 0) n += 255;
-      while (n >= 256) n -= 255;
-      return EXP_TABLE[n];
-    };
-    return _this;
-  }();
-
-  function qrPolynomial(num, shift) {
-    var _num = function() {
-      var offset = 0;
-      while (offset < num.length && num[offset] == 0) offset += 1;
-      var _num = new Array(num.length - offset + shift);
-      for (var i = 0; i < num.length - offset; i += 1) _num[i] = num[i + offset];
-      return _num;
-    }();
-    var _this = {};
-    _this.getAt = function(index) { return _num[index]; };
-    _this.getLength = function() { return _num.length; };
-    _this.multiply = function(e) {
-      var num = new Array(_this.getLength() + e.getLength() - 1);
-      for (var i = 0; i < _this.getLength(); i += 1) {
-        for (var j = 0; j < e.getLength(); j += 1) {
-          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
-        }
-      }
-      return qrPolynomial(num, 0);
-    };
-    _this.mod = function(e) {
-      if (_this.getLength() - e.getLength() < 0) return _this;
-      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
-      var num = new Array(_this.getLength() );
-      for (var i = 0; i < _this.getLength(); i += 1) num[i] = _this.getAt(i);
-      for (var i = 0; i < e.getLength(); i += 1) num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
-      return qrPolynomial(num, 0).mod(e);
-    };
-    return _this;
-  };
-
-  var QRRSBlock = function() {
-    var RS_BLOCK_TABLE = [
-      [1, 26, 19],[1, 26, 16],[1, 26, 13],[1, 26, 9],
-      [1, 44, 34],[1, 44, 28],[1, 44, 22],[1, 44, 16],
-      [1, 70, 55],[1, 70, 44],[2, 35, 17],[2, 35, 13],
-      [1, 100, 80],[2, 50, 32],[2, 50, 24],[4, 25, 9]
-    ];
-    var _this = {};
-    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
-      var rsBlock = RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
-      var length = rsBlock.length / 3;
-      var list = [];
-      for (var i = 0; i < length; i += 1) {
-        var count = rsBlock[i * 3 + 0];
-        var totalCount = rsBlock[i * 3 + 1];
-        var dataCount = rsBlock[i * 3 + 2];
-        for (var j = 0; j < count; j += 1) list.push({totalCount: totalCount, dataCount: dataCount});
-      }
-      return list;
-    };
-    return _this;
-  }();
-
-  var qrBitBuffer = function() {
-    var _buffer = [];
-    var _length = 0;
-    var _this = {};
-    _this.getBuffer = function() { return _buffer; };
-    _this.getLengthInBits = function() { return _length; };
-    _this.putBit = function(bit) {
-      var bufIndex = Math.floor(_length / 8);
-      if (_buffer.length <= bufIndex) _buffer.push(0);
-      if (bit) _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
-      _length += 1;
-    };
-    _this.put = function(num, length) {
-      for (var i = 0; i < length; i += 1) _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
-    };
-    return _this;
-  };
-
-  var qr8BitByte = function(data) {
-    var _bytes = [];
-    for (var i = 0; i < data.length; i++) {
-      var c = data.charCodeAt(i);
-      if (c < 128) _bytes.push(c);
-      else if (c < 2048) { _bytes.push(192 | (c >> 6)); _bytes.push(128 | (c & 63)); }
-      else { _bytes.push(224 | (c >> 12)); _bytes.push(128 | ((c >> 6) & 63)); _bytes.push(128 | (c & 63)); }
-    }
-    var _this = {};
-    _this.getMode = function() { return 4; };
-    _this.getLength = function() { return _bytes.length; };
-    _this.write = function(buffer) {
-      for (var i = 0; i < _bytes.length; i += 1) buffer.put(_bytes[i], 8);
-    };
-    return _this;
-  };
-
-  return qrcode;
-}();
-</script>
 <script>
-const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0');
-const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const $ = s => document.querySelector(s);
+const pad = n => String(n).padStart(2, '0');
+const ld = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch(e) { return d; } };
+const sv = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} };
 
-// Paste your Google Apps Script Web App URL below
-const SU0='https://script.google.com/macros/s/AKfycbzW4NSLNasNo3OdZbbSkCABO1h0Qygl3yY1_oCBXzR1BPk5dA0rgYqUybnBwB6aPQt7/exec';
-const SU=/^https:\/\/script\.google\.com\//.test(SU0)?SU0:'',TB=false,qs=new URLSearchParams(location.search),TEST=TB||qs.has('test');
-const M1=30,OPEN=30,K=TEST?'t_':'';
-if(qs.get('k'))sv('dg_k',qs.get('k'));const KEY=ld('dg_k','');
-const pe=v=>{if(!v)return 0;if(/^\d{1,2}:\d{2}$/.test(v))return Date.parse(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Singapore'}).format(new Date())+'T'+v.padStart(5,'0')+':00+08:00')||0;return Date.parse(/[zZ]|[+-]\d\d:?\d\d$/.test(v)?v:v+'+08:00')||0};
-const START0=pe(qs.get('start'))&&TEST?pe(qs.get('start')):Date.parse('2026-11-07T18:00:00+08:00');let START=START0;
-if(TEST){const o=ld(K+'dg_start',0);if(o)START=o}
-let DEV=ld(K+'dg_dev','');if(!DEV){DEV=Math.random().toString(36).slice(2,12);sv(K+'dg_dev',DEV)}
-const tm=ms=>new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'numeric',minute:'2-digit',hour12:true}).format(ms).toUpperCase();
-const tms=ms=>new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true}).format(ms).toUpperCase();
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'''}[c]));
-const stat=ms=>ms<START?'early':ms<=START+M1*6e4?'bird':'late';
-const res=ms=>{const t=stat(ms);return t==='early'?{e:'⏰',txt:`You’re early! Check in again from ${tm(START)} to claim your early bird surprise 🎁`}:t==='bird'?{e:'🎉',txt:'You’re an early bird! Show this screen to the host to claim your surprise 🎁'}:{e:'🪔',txt:`Welcome to the party! The early bird surprise was for check-ins between ${tm(START)} and ${tm(START+M1*6e4)}, but the fun is just getting started 🎶`}};
+// Paste your deployed Google Apps Script URL here
+const SU0 = 'https://script.google.com/macros/s/AKfycbwS33q9AA4MJ0meS9n6iIFnJIhLi54ffU1CL8p2Pw19J3u372D12SGHAsMOtXqu3u3GKA/exec';
+const SU = /^https:\/\/script\.google\.com\//.test(SU0) ? SU0 : '';
 
-async function api(o){
-  const c=new AbortController(),t=setTimeout(()=>c.abort(),9000);
-  try{
-    const r=await fetch(SU+'?'+new URLSearchParams({...o,start:START,test:TEST?1:0,k:KEY}),{signal:c.signal});
+const qs = new URLSearchParams(location.search);
+const TEST = qs.has('test');
+const M1 = 30, OPEN = 30, K = TEST ? 't_' : '';
+
+const pe = v => {
+  if (!v) return 0;
+  if (/^\d{1,2}:\d{2}$/.test(v)) {
+    return Date.parse(new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Singapore' }).format(new Date()) + 'T' + v.padStart(5, '0') + ':00+08:00') || 0;
+  }
+  return Date.parse(/[zZ]|[+-]\d\d:?\d\d$/.test(v) ? v : v + '+08:00') || 0;
+};
+
+// Singapore Time: Saturday, 7 Nov 2026, 6:00 PM sharp
+const START0 = pe(qs.get('start')) && TEST ? pe(qs.get('start')) : Date.parse('2026-11-07T18:00:00+08:00');
+let START = START0;
+if (TEST) { const o = ld(K + 'dg_start', 0); if (o) START = o; }
+
+let DEV = ld(K + 'dg_dev', '');
+if (!DEV) { DEV = Math.random().toString(36).slice(2, 12); sv(K + 'dg_dev', DEV); }
+
+const tm = ms => new Intl.DateTimeFormat('en-SG', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: '2-digit', hour12: true }).format(ms).toUpperCase();
+const tms = ms => new Intl.DateTimeFormat('en-SG', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }).format(ms).toUpperCase();
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&', '<': '<', '>': '>', '"': '"', "'": ''' }[c]));
+
+const stat = ms => ms < START ? 'early' : ms <= START + M1 * 6e4 ? 'bird' : 'late';
+const res = ms => {
+  const t = stat(ms);
+  return t === 'early' 
+    ? { e: '⏰', txt: `You’re early! Check in again from ${tm(START)} to claim your early bird surprise 🎁` }
+    : t === 'bird'
+    ? { e: '🎉', txt: 'You’re an early bird! Show this screen to the host to claim your surprise 🎁' }
+    : { e: '🪔', txt: `Welcome to the party! The early bird surprise was for check-ins between ${tm(START)} and ${tm(START + M1 * 6e4)}, but the fun is just getting started 🎶` };
+};
+
+async function api(o) {
+  const c = new AbortController(), t = setTimeout(() => c.abort(), 9000);
+  try {
+    const r = await fetch(SU + '?' + new URLSearchParams({ ...o, start: START, test: TEST ? 1 : 0 }), { signal: c.signal });
     return await r.json();
-  }finally{clearTimeout(t)}
+  } finally { clearTimeout(t); }
 }
 
-function paint(){
-  document.querySelectorAll('[data-o]').forEach(e=>e.textContent=tm(START+Number(e.dataset.o)*6e4));
-  if(TEST){
-    $('#sub').textContent='🧪 Test mode · party starts '+tm(START);
-    $('#tc').hidden=false;
+function paint() {
+  if (TEST) {
+    $('#sub').textContent = '🧪 Test mode · party starts ' + tm(START);
+    $('#tc').hidden = false;
   }
 }
 
-const ids=['countdown','checkin','qr','board'];let cur='countdown';
-function route(){
-  const h=(location.hash||'#countdown').slice(1);
-  cur=ids.includes(h)?h:'countdown';
-  ids.forEach(i=>{
-    const el=$('#v-'+i);
-    if(el) el.classList.toggle('on',i===cur);
+const ids = ['countdown', 'checkin', 'qr', 'board'];
+let cur = 'countdown';
+
+function route() {
+  const h = (location.hash || '#countdown').slice(1);
+  cur = ids.includes(h) ? h : 'countdown';
+  ids.forEach(i => {
+    const el = $('#v-' + i);
+    if (el) el.classList.toggle('on', i === cur);
   });
-  document.querySelectorAll('nav a').forEach(a=>{
-    if(a.getAttribute('href')==='#'+cur) a.setAttribute('aria-current','page');
+  document.querySelectorAll('nav a').forEach(a => {
+    if (a.getAttribute('href') === '#' + cur) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
-  if(cur==='qr')renderQR();
-  if(cur==='board')loadBoard();
+  if (cur === 'qr') renderQR();
+  if (cur === 'board') loadBoard();
 }
-addEventListener('hashchange',route);
+window.addEventListener('hashchange', route);
 
-let PAST=null;
-function tick(){
-  const n=Date.now(),d=START-n,g=START+M1*6e4;
-  if((d<=0)!==PAST){PAST=d<=0;renderCI()}
-  if(d>0){
-    const s=Math.floor(d/1e3);
-    $('#D').textContent=pad(Math.floor(s/86400));
-    $('#Hr').textContent=pad(Math.floor(s%86400/3600));
-    $('#M').textContent=pad(Math.floor(s%3600/60));
-    $('#S').textContent=pad(s%60);
-    $('#cmsg').textContent=d<=OPEN*6e4?`Check-in is open! The early bird surprise starts at ${tm(START)} ⏰`:`Check in between ${tm(START)} and ${tm(g)} to claim your early bird surprise 🎁`;
-  }else{
-    ['D','Hr','M','S'].forEach(i=>$('#'+i).textContent='00');
-    $('#cmsg').textContent=n<=g?`Early bird time! ${Math.ceil((g-n)/6e4)} min left to claim your surprise 🎁`:'Welcome! The party is on 🪔';
+let PAST = null;
+function tick() {
+  const n = Date.now(), d = START - n, g = START + M1 * 6e4;
+  if ((d <= 0) !== PAST) { PAST = d <= 0; renderCI(); }
+  if (d > 0) {
+    const s = Math.floor(d / 1e3);
+    $('#D').textContent = pad(Math.floor(s / 86400));
+    $('#Hr').textContent = pad(Math.floor(s % 86400 / 3600));
+    $('#M').textContent = pad(Math.floor(s % 3600 / 60));
+    $('#S').textContent = pad(s % 60);
+    $('#cmsg').textContent = d <= OPEN * 6e4 
+      ? `Check-in is open! The early bird surprise starts at ${tm(START)} ⏰`
+      : `Check in between ${tm(START)} and ${tm(g)} to claim your early bird surprise 🎁`;
+  } else {
+    ['D', 'Hr', 'M', 'S'].forEach(i => $('#' + i).textContent = '00');
+    $('#cmsg').textContent = n <= g 
+      ? `Early bird time! ${Math.ceil((g - n) / 6e4)} min left to claim your surprise 🎁`
+      : 'Welcome! The party is on 🪔';
   }
 }
-setInterval(tick,1000);
+setInterval(tick, 1000);
 
-function renderCI(){
-  const c=ld(K+'dg_ci',null),up=!!c&&c.ts<START&&Date.now()>=START;
-  $('#ciForm').hidden=!!c&&!up;
-  $('#ciRes').hidden=!c||up;
-  $('#ciHint').textContent=up?'You checked in early. Tap below now to claim your early bird surprise 🎁':'';
-  if(c&&!up){
-    const r=res(c.ts);
-    $('#ciBig').textContent=r.e;
-    $('#ciTxt').innerHTML=`<b>${esc(c.name)}</b> checked in at ${tms(c.ts)}<br>${r.txt}`;
-    $('#ciNote').textContent=c.dup?'You were already checked in earlier.':c.warn?'Could not reach the sheet. Show this screen to the host.':'';
+function renderCI() {
+  const c = ld(K + 'dg_ci', null), up = !!c && c.ts < START && Date.now() >= START;
+  $('#ciForm').hidden = !!c && !up;
+  $('#ciRes').hidden = !c || up;
+  $('#ciHint').textContent = up ? 'You checked in early. Tap below now to claim your early bird surprise 🎁' : '';
+  if (c && !up) {
+    const r = res(c.ts);
+    $('#ciBig').textContent = r.e;
+    $('#ciTxt').innerHTML = `<b>${esc(c.name)}</b> checked in at ${tms(c.ts)}<br>${r.txt}`;
+    $('#ciNote').textContent = c.dup ? 'You were already checked in earlier.' : c.warn ? 'Could not reach the sheet. Show this screen to the host.' : '';
   }
 }
 
-$('#nm').value=ld('dg_name','');
-$('#ciBtn').onclick=async()=>{
-  const name=$('#nm').value.trim(),err=$('#ciErr');
-  if(!name){err.textContent='Please type your name first 🙂';return}
-  if(Date.now()<START-OPEN*6e4&&!TEST){err.textContent=`Check-in opens at ${tm(START-OPEN*6e4)}. See you soon!`;return}
-  err.textContent='';
-  const b=$('#ciBtn');
-  b.disabled=true;
-  b.textContent='Checking in…';
-  let rec={name,ts:Date.now()};
-  if(SU){
-    try{
-      const r=await api({action:'checkin',name,dev:DEV});
-      if(r.v!==3){
-        err.textContent='The sheet script is out of date. Please tell the host.';
-        b.disabled=false;
-        b.textContent='Check in now';
+$('#nm').value = ld('dg_name', '');
+$('#ciBtn').onclick = async () => {
+  const name = $('#nm').value.trim(), err = $('#ciErr');
+  if (!name) { err.textContent = 'Please type your name first 🙂'; return; }
+  if (Date.now() < START - OPEN * 6e4 && !TEST) {
+    err.textContent = `Check-in opens at ${tm(START - OPEN * 6e4)}. See you soon!`;
+    return;
+  }
+  err.textContent = '';
+  const b = $('#ciBtn');
+  b.disabled = true;
+  b.textContent = 'Checking in…';
+  let rec = { name, ts: Date.now() };
+  if (SU) {
+    try {
+      const r = await api({ action: 'checkin', name, dev: DEV });
+      if (r.v !== 3) {
+        err.textContent = 'The sheet script is out of date. Please tell the host.';
+        b.disabled = false; b.textContent = 'Check in now';
         return;
       }
-      if(!r.ok){
-        err.textContent=r.err==='early'?`Check-in opens at ${tm(START-OPEN*6e4)}. See you soon!`:r.err==='key'?'Please scan the QR code at the door to check in 🙂':r.err==='full'?'The check-in list is full. Please tell the host.':'Something went wrong. Please try again.';
-        b.disabled=false;
-        b.textContent='Check in now';
+      if (!r.ok) {
+        err.textContent = r.err === 'early' ? `Check-in opens at ${tm(START - OPEN * 6e4)}. See you soon!` : 'Something went wrong. Please try again.';
+        b.disabled = false; b.textContent = 'Check in now';
         return;
       }
-      rec={name:r.name,ts:r.ts,dup:r.dup};
-    }catch(e){rec.warn=1}
+      rec = { name: r.name, ts: r.ts, dup: r.dup };
+    } catch(e) { rec.warn = 1; }
   }
-  sv('dg_name',name);
-  sv(K+'dg_ci',rec);
-  b.disabled=false;
-  b.textContent='Check in now';
+  sv('dg_name', name);
+  sv(K + 'dg_ci', rec);
+  b.disabled = false;
+  b.textContent = 'Check in now';
   renderCI();
 };
 
-function renderQR(){
-  const b=new URL(location.href.split('#')[0]);
-  if(KEY)b.searchParams.set('k',KEY);
-  const u=b.href+'#checkin',q=qrcode(4,'M');
+function renderQR() {
+  if (typeof qrcode === 'undefined') return;
+  const u = location.origin + location.pathname + '#checkin';
+  const q = qrcode(4, 'M');
   q.addData(u);
   q.make();
-  $('#qrbox').innerHTML=q.createSvgTag(4,2);
+  $('#qrbox').innerHTML = q.createSvgTag(4, 2);
 }
 
-let rows=[];
-function drawBoard(){
-  const b=rows.filter(e=>e.bird).length;
-  $('#bdSum').textContent=rows.length?`${rows.length} checked in · ${b} early bird${b===1?'':'s'} 🎁`:'';
-  $('#bd').innerHTML=rows.length?rows.map(e=>`<li><span>${e.bird?'🎁':'✅'}</span><span class="n">${esc(e.name)}<small>${tms(e.ts)}</small></span></li>`).join(''):'<li class="mut">No check-ins yet</li>';
+let rows = [];
+function drawBoard() {
+  const b = rows.filter(e => e.bird).length;
+  $('#bdSum').textContent = rows.length ? `${rows.length} checked in · ${b} early bird${b === 1 ? '' : 's'} 🎁` : '';
+  $('#bd').innerHTML = rows.length 
+    ? rows.map(e => `<li><span>${e.bird ? '🎁' : '✅'}</span><span class="n">${esc(e.name)}<small>${tms(e.ts)}</small></span></li>`).join('')
+    : '<li class="mut">No check-ins yet</li>';
 }
 
-async function loadBoard(){
-  const m=$('#bdMsg');
-  if(!SU){$('#bd').innerHTML='';m.textContent='The guest list appears once the Google Sheet is connected.';return}
-  const pin=$('#hp').value.trim();
-  if(!pin){m.textContent='Enter the host PIN to see the guest list.';return}
-  m.textContent='';
-  try{
-    const r=await api({action:'board',pin});
-    if(r.v!==3){m.textContent='⚠️ The sheet script is out of date. Replace Code.gs and deploy a New version.';return}
-    if(!r.ok){m.textContent='Wrong PIN.';return}
-    sv('dg_pin',pin);
-    rows=r.rows||[];
+async function loadBoard() {
+  const m = $('#bdMsg');
+  if (!SU) { $('#bd').innerHTML = ''; m.textContent = 'The guest list appears once the Google Sheet is connected.'; return; }
+  const pin = $('#hp').value.trim();
+  if (!pin) { m.textContent = 'Enter the host PIN to see the guest list.'; return; }
+  m.textContent = '';
+  try {
+    const r = await api({ action: 'board', pin });
+    if (r.v !== 3) { m.textContent = '⚠️ The sheet script is out of date. Check Code.gs.'; return; }
+    if (!r.ok) { m.textContent = 'Wrong PIN.'; return; }
+    sv('dg_pin', pin);
+    rows = r.rows || [];
     drawBoard();
-  }catch(e){m.textContent='Could not load the guest list. Tap the button again.'}
+  } catch(e) { m.textContent = 'Could not load the guest list. Tap refresh again.'; }
 }
 
-$('#bdRef').onclick=loadBoard;
-setInterval(()=>{if(cur==='board'&&$('#hp').value.trim())loadBoard()},20000);
+$('#bdRef').onclick = loadBoard;
+setInterval(() => { if (cur === 'board' && $('#hp').value.trim()) loadBoard(); }, 20000);
 
-document.querySelectorAll('#tc [data-m]').forEach(b=>b.onclick=()=>{
-  START=Date.now()+Number(b.dataset.m)*6e4;
-  sv(K+'dg_start',START);
-  sv(K+'dg_ci',null);
-  DEV=Math.random().toString(36).slice(2,12);
-  sv(K+'dg_dev',DEV);
-  paint();
-  renderCI();
-  tick();
+document.querySelectorAll('#tc [data-m]').forEach(b => b.onclick = () => {
+  START = Date.now() + Number(b.dataset.m) * 6e4;
+  sv(K + 'dg_start', START);
+  sv(K + 'dg_ci', null);
+  DEV = Math.random().toString(36).slice(2, 12);
+  sv(K + 'dg_dev', DEV);
+  paint(); renderCI(); tick();
 });
 
-$('#tcr').onclick=()=>{
-  START=START0;
-  sv(K+'dg_start',0);
-  sv(K+'dg_ci',null);
-  paint();
-  renderCI();
-  tick();
+$('#tcr').onclick = () => {
+  START = START0;
+  sv(K + 'dg_start', 0);
+  sv(K + 'dg_ci', null);
+  paint(); renderCI(); tick();
 };
 
-$('#hp').value=ld('dg_pin','');
-$('#hAdd').onclick=async()=>{
-  const name=$('#hn').value.trim(),pin=$('#hp').value.trim(),m=$('#hMsg');
-  if(!SU){m.textContent='Connect the Google Sheet first.';return}
-  if(!name||!pin){m.textContent='Enter the PIN and the guest name.';return}
-  const t=$('#htm').value;
-  let ts=Date.now();
-  if(t)ts=Date.parse(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Singapore'}).format(START)+'T'+t+':00+08:00');
-  m.textContent='Adding…';
-  try{
-    const r=await api({action:'manual',name,pin,ts});
-    if(r.v!==3){m.textContent='⚠️ The sheet script is out of date. Replace Code.gs and deploy a New version.';return}
-    if(r.ok){
-      sv('dg_pin',pin);
-      m.textContent=`Added ${r.name}${r.bird?' 🎁 (early bird)':''} ✅`;
-      $('#hn').value='';
-      $('#htm').value='';
+$('#hp').value = ld('dg_pin', '');
+$('#hAdd').onclick = async () => {
+  const name = $('#hn').value.trim(), pin = $('#hp').value.trim(), m = $('#hMsg');
+  if (!SU) { m.textContent = 'Connect the Google Sheet first.'; return; }
+  if (!name || !pin) { m.textContent = 'Enter the PIN and the guest name.'; return; }
+  const t = $('#htm').value;
+  let ts = Date.now();
+  if (t) ts = Date.parse(new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Singapore' }).format(START) + 'T' + t + ':00+08:00');
+  m.textContent = 'Adding…';
+  try {
+    const r = await api({ action: 'manual', name, pin, ts });
+    if (r.v !== 3) { m.textContent = '⚠️ The sheet script is out of date.'; return; }
+    if (r.ok) {
+      sv('dg_pin', pin);
+      m.textContent = `Added ${r.name}${r.bird ? ' 🎁 (early bird)' : ''} ✅`;
+      $('#hn').value = ''; $('#htm').value = '';
       loadBoard();
-    }else{
-      m.textContent=r.err==='pin'?'Wrong PIN.':'Could not add. Try again.';
+    } else {
+      m.textContent = r.err === 'pin' ? 'Wrong PIN.' : 'Could not add. Try again.';
     }
-  }catch(e){m.textContent='Could not reach the sheet.'}
+  } catch(e) { m.textContent = 'Could not reach the sheet.'; }
 };
 
 paint();
 renderCI();
 tick();
 route();
-</script></body></html>
+</script>
+</body>
+</html>
