@@ -6,13 +6,14 @@
   <title>Degave Family Diwali Party</title>
   <style>
     :root {
-      --bg-color: #230d47;
-      --card-bg: #351965;
-      --gold-accent: #f5b041;
-      --gold-hover: #e09d31;
-      --text-main: #ffffff;
-      --text-muted: #d8c8ea;
-      --border-color: rgba(255, 255, 255, 0.12);
+      --bg-color: #31135e;
+      --card-bg: rgba(255, 255, 255, 0.06);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --primary-yellow: #f6ad28;
+      --primary-yellow-hover: #e09b1f;
+      --text-white: #ffffff;
+      --text-dim: #c4b5fd;
+      --text-muted: #a78bfa;
     }
 
     * {
@@ -23,18 +24,18 @@
     }
 
     body {
-      background: radial-gradient(circle at top, #3b1773, var(--bg-color));
-      color: var(--text-main);
+      background-color: var(--bg-color);
+      color: var(--text-white);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 40px 16px;
+      padding: 60px 20px;
     }
 
     .container {
       width: 100%;
-      max-width: 580px;
+      max-width: 600px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -43,28 +44,29 @@
 
     .diya-icon {
       font-size: 2.2rem;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     h1 {
-      font-size: 1.85rem;
-      color: var(--gold-accent);
-      font-weight: 700;
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--primary-yellow);
       margin-bottom: 6px;
+      letter-spacing: -0.5px;
     }
 
     .subtitle {
       font-size: 0.95rem;
-      color: var(--text-muted);
-      margin-bottom: 24px;
+      color: var(--text-dim);
+      margin-bottom: 28px;
     }
 
-    /* Navigation Bar */
+    /* Top Nav Pills */
     .nav-bar {
       display: flex;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 4px;
-      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.22);
+      padding: 6px;
+      border-radius: 16px;
       gap: 6px;
       margin-bottom: 24px;
       width: 100%;
@@ -74,42 +76,39 @@
       flex: 1;
       border: none;
       background: transparent;
-      color: var(--text-muted);
-      padding: 10px 14px;
-      border-radius: 8px;
+      color: var(--text-dim);
+      padding: 12px 14px;
+      border-radius: 12px;
       font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
       transition: all 0.2s ease;
     }
 
-    .nav-btn:hover:not(:disabled) {
+    .nav-btn:hover {
       color: #fff;
     }
 
     .nav-btn.active {
-      background-color: var(--gold-accent);
-      color: #230d47;
+      background-color: var(--primary-yellow);
+      color: #1e0938;
+      box-shadow: 0 4px 14px rgba(246, 173, 40, 0.35);
     }
 
-    .nav-btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-
-    /* Card Panels */
+    /* Content Cards */
     .view-panel {
       display: none;
       width: 100%;
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 32px 24px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 36px 28px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
     }
 
     .view-panel.active {
@@ -117,127 +116,179 @@
     }
 
     /* Countdown Styling */
+    .panel-heading {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 22px;
+      color: #fff;
+    }
+
     .timer-grid {
       display: flex;
       justify-content: space-around;
-      margin: 20px 0;
+      align-items: center;
+      margin: 10px 0 24px 0;
     }
 
     .time-slot {
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-width: 60px;
     }
 
     .time-val {
-      font-size: 2.2rem;
-      font-weight: bold;
-      color: var(--gold-accent);
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
     }
 
     .time-lbl {
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
+      font-weight: 700;
       color: var(--text-muted);
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+      margin-top: 8px;
     }
 
-    /* Check-in Form & State */
+    .lock-notice {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* Check-in Forms & Buttons */
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       text-align: left;
     }
 
     label {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       font-size: 0.9rem;
-      color: var(--text-muted);
+      color: var(--text-dim);
+      font-weight: 600;
     }
 
     input[type="text"] {
       width: 100%;
-      padding: 12px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      background: rgba(255, 255, 255, 0.05);
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: rgba(0, 0, 0, 0.25);
       color: #fff;
       font-size: 1rem;
       outline: none;
+      transition: border 0.2s ease;
     }
 
     input[type="text"]:focus {
-      border-color: var(--gold-accent);
+      border-color: var(--primary-yellow);
     }
 
     .primary-btn {
       width: 100%;
-      padding: 12px;
-      background: var(--gold-accent);
-      color: #230d47;
+      padding: 13px;
+      background: var(--primary-yellow);
+      color: #1e0938;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      margin-top: 8px;
+      margin-top: 10px;
       transition: background 0.2s ease;
     }
 
     .primary-btn:hover {
-      background: var(--gold-hover);
+      background: var(--primary-yellow-hover);
     }
 
     .secondary-btn {
       background: transparent;
-      border: 1px solid var(--gold-accent);
-      color: var(--gold-accent);
-      padding: 10px 16px;
-      border-radius: 8px;
+      border: 1px solid var(--primary-yellow);
+      color: var(--primary-yellow);
+      padding: 10px 18px;
+      border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
       margin-top: 16px;
+      transition: all 0.2s ease;
     }
 
-    .lock-notice {
-      color: var(--text-muted);
-      line-height: 1.5;
+    .secondary-btn:hover {
+      background: rgba(246, 173, 40, 0.12);
     }
 
-    .lock-notice strong {
-      color: var(--gold-accent);
+    /* Early Bird Offer Board */
+    .offer-banner {
+      background: linear-gradient(135deg, rgba(246, 173, 40, 0.15), rgba(246, 173, 40, 0.05));
+      border: 1px dashed var(--primary-yellow);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      text-align: left;
     }
 
-    /* Board / Table Styling */
-    .guest-list {
+    .offer-banner-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-yellow);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .offer-banner-desc {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .board-list {
       list-style: none;
-      margin-top: 16px;
+      margin-top: 10px;
       text-align: left;
       max-height: 280px;
       overflow-y: auto;
     }
 
-    .guest-item {
+    .board-item {
       display: flex;
       justify-content: space-between;
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border-color);
-      font-size: 0.95rem;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      margin-bottom: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .guest-item:last-child {
-      border-bottom: none;
+    .board-item.early-bird {
+      border: 1px solid rgba(246, 173, 40, 0.4);
+      background: rgba(246, 173, 40, 0.07);
     }
 
-    .guest-time {
-      color: var(--text-muted);
-      font-size: 0.85rem;
+    .early-bird-badge {
+      display: inline-block;
+      background: var(--primary-yellow);
+      color: #1e0938;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-left: 8px;
+      text-transform: uppercase;
     }
 
-    .empty-state {
-      color: var(--text-muted);
+    .board-empty {
+      color: var(--text-dim);
       font-style: italic;
-      padding: 20px 0;
+      padding: 24px 0;
     }
   </style>
 </head>
@@ -247,16 +298,16 @@
     <h1>Degave Family Diwali Party</h1>
     <p class="subtitle">Saturday, 7th November 2026 • 6 PM sharp • Punggol</p>
 
-    <!-- Navigation Tabs -->
+    <!-- Navigation Pills -->
     <div class="nav-bar">
       <button class="nav-btn active" id="tabCountdown" onclick="switchTab('countdown')">⏳ Countdown</button>
       <button class="nav-btn" id="tabCheckin" onclick="switchTab('checkin')">✅ Check in</button>
       <button class="nav-btn" id="tabBoard" onclick="switchTab('board')">🏆 Board</button>
     </div>
 
-    <!-- PANEL 1: COUNTDOWN -->
+    <!-- 1. COUNTDOWN VIEW -->
     <div id="panelCountdown" class="view-panel active">
-      <h3>Check-in Opens In:</h3>
+      <div class="panel-heading">Check-in Opens In:</div>
       <div class="timer-grid">
         <div class="time-slot"><span class="time-val" id="days">00</span><span class="time-lbl">Days</span></div>
         <div class="time-slot"><span class="time-val" id="hours">00</span><span class="time-lbl">Hours</span></div>
@@ -266,116 +317,119 @@
       <p id="countdownMessage" class="lock-notice">Check-in will unlock at 6:00 PM SGT on November 7, 2026.</p>
     </div>
 
-    <!-- PANEL 2: CHECK-IN -->
+    <!-- 2. CHECK-IN VIEW -->
     <div id="panelCheckin" class="view-panel">
-      <!-- State 1: Locked -->
+      <!-- Locked State (Before 6 PM SGT on 7 Nov) -->
       <div id="checkinLocked">
         <div class="diya-icon">🔒</div>
-        <h3>Check-in Is Currently Locked</h3>
-        <p class="lock-notice" style="margin-top: 10px;">
+        <div class="panel-heading">Check-in Is Currently Locked</div>
+        <p class="lock-notice">
           Early check-in is not permitted.<br />
           Please return on <strong>Saturday, 7 November at 6:00 PM SGT</strong>.
         </p>
       </div>
 
-      <!-- State 2: Open Form -->
+      <!-- Unlocked Input State -->
       <div id="checkinUnlocked" style="display: none;">
         <div class="diya-icon">🪔</div>
-        <h3 style="margin-bottom: 16px;">Welcome! Please Check In</h3>
+        <div class="panel-heading">Welcome! Please Check In</div>
         <form id="checkinForm" onsubmit="handleCheckin(event)">
           <div class="form-group">
-            <label for="guestName">Your Name / Nickname</label>
-            <input type="text" id="guestName" placeholder="e.g., pnkj" required autocomplete="off" />
+            <label for="guestName">Your Name</label>
+            <input type="text" id="guestName" placeholder="Enter your name" required autocomplete="off" />
           </div>
           <button type="submit" class="primary-btn">Complete Check-in</button>
         </form>
       </div>
 
-      <!-- State 3: Already Checked In Confirmation -->
+      <!-- Success / Already Checked In State -->
       <div id="checkinSuccess" style="display: none;">
         <div class="diya-icon">🪔</div>
-        <h3 id="welcomeMsg" style="margin-bottom: 8px;">pnkj, you are checked in!</h3>
-        <p class="subtitle" style="margin-bottom: 16px;">Welcome to the party! 🎶</p>
+        <h2 id="welcomeMsg" style="font-size: 1.4rem; color: #fff; margin-bottom: 6px;">You are checked in!</h2>
+        <p class="subtitle" style="margin-bottom: 20px;">Welcome to the party! 🎶</p>
         <button class="primary-btn" onclick="switchTab('board')">View Live Leaderboard</button>
-        <button class="secondary-btn" onclick="clearMyCheckin()">Reset / Check in Another</button>
+        <button class="secondary-btn" onclick="clearSession()">Reset Check-in</button>
       </div>
     </div>
 
-    <!-- PANEL 3: BOARD -->
+    <!-- 3. EARLY BIRD OFFER BOARD VIEW -->
     <div id="panelBoard" class="view-panel">
-      <h3>Live Guest Board</h3>
-      <p class="subtitle" style="margin-bottom: 12px;">Guests checked in for the party</p>
-      <ul class="guest-list" id="boardList"></ul>
-      <div id="boardEmpty" class="empty-state">No guests have checked in yet.</div>
+      <div class="offer-banner">
+        <div class="offer-banner-title">🎁 Early Bird Offers!</div>
+        <div class="offer-banner-desc">
+          First guests arriving and checking in at 6 PM sharp qualify for our exclusive early bird surprise gifts!
+        </div>
+      </div>
+
+      <div class="panel-heading" style="text-align: left; font-size: 1rem; margin-bottom: 12px;">Guests Checked In:</div>
+      <ul class="board-list" id="boardList"></ul>
+      <div id="boardEmpty" class="board-empty">No check-ins yet. Board opens with check-in at 6 PM.</div>
     </div>
   </div>
 
   <script>
-    // HARD LOCK: 7 November 2026, 18:00:00 SGT (UTC+8)
+    // Exact opening time: Saturday, 7 Nov 2026, 6:00 PM SGT
     const CHECKIN_OPEN_TIME = new Date("2026-11-07T18:00:00+08:00").getTime();
-    const STORAGE_KEY_CHECKED_USER = "diwali_checked_in_user";
-    const STORAGE_KEY_ALL_GUESTS = "diwali_board_guests";
+    const STORAGE_KEY_USER = "diwali_party_user";
+    const STORAGE_KEY_BOARD = "diwali_party_board";
 
-    let currentTab = "countdown";
+    let activeTab = "countdown";
 
-    function isCheckinOpen() {
+    function isOpen() {
       return Date.now() >= CHECKIN_OPEN_TIME;
     }
 
-    function switchTab(target) {
-      currentTab = target;
-      window.location.hash = target;
+    function switchTab(tab) {
+      activeTab = tab;
+      window.location.hash = tab;
 
-      // Update Tab Styles
       document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
       document.querySelectorAll(".view-panel").forEach(pnl => pnl.classList.remove("active"));
 
-      if (target === "countdown") {
+      if (tab === "countdown") {
         document.getElementById("tabCountdown").classList.add("active");
         document.getElementById("panelCountdown").classList.add("active");
-      } else if (target === "checkin") {
+      } else if (tab === "checkin") {
         document.getElementById("tabCheckin").classList.add("active");
         document.getElementById("panelCheckin").classList.add("active");
-        renderCheckinView();
-      } else if (target === "board") {
+        renderCheckin();
+      } else if (tab === "board") {
         document.getElementById("tabBoard").classList.add("active");
         document.getElementById("panelBoard").classList.add("active");
         renderBoard();
       }
     }
 
-    function renderCheckinView() {
-      const lockedDiv = document.getElementById("checkinLocked");
-      const unlockedDiv = document.getElementById("checkinUnlocked");
-      const successDiv = document.getElementById("checkinSuccess");
-      const checkedUser = localStorage.getItem(STORAGE_KEY_CHECKED_USER);
+    function renderCheckin() {
+      const locked = document.getElementById("checkinLocked");
+      const unlocked = document.getElementById("checkinUnlocked");
+      const success = document.getElementById("checkinSuccess");
+      const savedUser = localStorage.getItem(STORAGE_KEY_USER);
 
-      // Gate 1: Check time lock first
-      if (!isCheckinOpen()) {
-        lockedDiv.style.display = "block";
-        unlockedDiv.style.display = "none";
-        successDiv.style.display = "none";
+      // Rule: Never show check-in before 7 Nov 6 PM SGT
+      if (!isOpen()) {
+        locked.style.display = "block";
+        unlocked.style.display = "none";
+        success.style.display = "none";
         return;
       }
 
-      // Gate 2: If unlocked, check if already checked in
-      lockedDiv.style.display = "none";
-      if (checkedUser) {
-        document.getElementById("welcomeMsg").innerText = `${checkedUser}, you are checked in!`;
-        unlockedDiv.style.display = "none";
-        successDiv.style.display = "block";
+      locked.style.display = "none";
+      if (savedUser) {
+        document.getElementById("welcomeMsg").innerText = `${savedUser}, you are checked in!`;
+        unlocked.style.display = "none";
+        success.style.display = "block";
       } else {
-        unlockedDiv.style.display = "block";
-        successDiv.style.display = "none";
+        unlocked.style.display = "block";
+        success.style.display = "none";
       }
     }
 
     function handleCheckin(e) {
       e.preventDefault();
 
-      // Guard: strictly reject early submission attempts
-      if (!isCheckinOpen()) {
-        alert("Check-in is locked until Saturday, 7 November at 6:00 PM SGT.");
+      if (!isOpen()) {
+        alert("Check-in is locked until 7th November at 6:00 PM SGT!");
         return;
       }
 
@@ -383,66 +437,68 @@
       const name = input.value.trim();
       if (!name) return;
 
-      const timestamp = new Date().toLocaleTimeString("en-SG", {
+      const timeStr = new Date().toLocaleTimeString("en-SG", {
         timeZone: "Asia/Singapore",
         hour: "2-digit",
         minute: "2-digit"
       });
 
-      // Save user session locally
-      localStorage.setItem(STORAGE_KEY_CHECKED_USER, name);
+      localStorage.setItem(STORAGE_KEY_USER, name);
 
-      // Save to board records (simulate backend storage via localStorage)
-      let guests = [];
+      let board = [];
       try {
-        guests = JSON.parse(localStorage.getItem(STORAGE_KEY_ALL_GUESTS) || "[]");
+        board = JSON.parse(localStorage.getItem(STORAGE_KEY_BOARD) || "[]");
       } catch (err) {
-        guests = [];
+        board = [];
       }
 
-      guests.unshift({ name, time: timestamp });
-      localStorage.setItem(STORAGE_KEY_ALL_GUESTS, JSON.stringify(guests));
+      // First 5 guests get the Early Bird mark
+      const isEarlyBird = board.length < 5;
+      board.unshift({ name, time: timeStr, earlyBird: isEarlyBird });
+      localStorage.setItem(STORAGE_KEY_BOARD, JSON.stringify(board));
 
       input.value = "";
-      renderCheckinView();
+      renderCheckin();
     }
 
-    function clearMyCheckin() {
-      localStorage.removeItem(STORAGE_KEY_CHECKED_USER);
-      renderCheckinView();
+    function clearSession() {
+      localStorage.removeItem(STORAGE_KEY_USER);
+      renderCheckin();
     }
 
     function renderBoard() {
-      const listEl = document.getElementById("boardList");
-      const emptyEl = document.getElementById("boardEmpty");
-      let guests = [];
+      const boardList = document.getElementById("boardList");
+      const boardEmpty = document.getElementById("boardEmpty");
+      let board = [];
 
       try {
-        guests = JSON.parse(localStorage.getItem(STORAGE_KEY_ALL_GUESTS) || "[]");
+        board = JSON.parse(localStorage.getItem(STORAGE_KEY_BOARD) || "[]");
       } catch (err) {
-        guests = [];
+        board = [];
       }
 
-      listEl.innerHTML = "";
-      if (guests.length === 0) {
-        emptyEl.style.display = "block";
+      boardList.innerHTML = "";
+      if (board.length === 0) {
+        boardEmpty.style.display = "block";
       } else {
-        emptyEl.style.display = "none";
-        guests.forEach((g, index) => {
+        boardEmpty.style.display = "none";
+        board.forEach((guest, idx) => {
           const li = document.createElement("li");
-          li.className = "guest-item";
+          li.className = `board-item ${guest.earlyBird ? "early-bird" : ""}`;
           li.innerHTML = `
-            <span><strong>#${index + 1}</strong> ${g.name}</span>
-            <span class="guest-time">${g.time}</span>
+            <span>
+              <strong>#${idx + 1}</strong> ${guest.name}
+              ${guest.earlyBird ? '<span class="early-bird-badge">Early Bird</span>' : ''}
+            </span>
+            <span style="color: var(--text-muted); font-size: 0.85rem;">${guest.time}</span>
           `;
-          listEl.appendChild(li);
+          boardList.appendChild(li);
         });
       }
     }
 
     function updateCountdown() {
-      const now = Date.now();
-      const diff = CHECKIN_OPEN_TIME - now;
+      const diff = CHECKIN_OPEN_TIME - Date.now();
 
       if (diff <= 0) {
         document.getElementById("days").innerText = "00";
@@ -451,9 +507,8 @@
         document.getElementById("seconds").innerText = "00";
         document.getElementById("countdownMessage").innerText = "Check-in is now OPEN!";
 
-        // If currently viewing check-in panel, refresh its display
-        if (currentTab === "checkin") {
-          renderCheckinView();
+        if (activeTab === "checkin") {
+          renderCheckin();
         }
         return;
       }
@@ -469,10 +524,9 @@
       document.getElementById("seconds").innerText = String(s).padStart(2, "0");
     }
 
-    // Sync hash navigation on load
     window.addEventListener("DOMContentLoaded", () => {
       const hash = window.location.hash.replace("#", "");
-      if (hash === "checkin" || hash === "board" || hash === "countdown") {
+      if (["countdown", "checkin", "board"].includes(hash)) {
         switchTab(hash);
       }
       updateCountdown();
@@ -481,7 +535,7 @@
 
     window.addEventListener("hashchange", () => {
       const hash = window.location.hash.replace("#", "");
-      if (["checkin", "board", "countdown"].includes(hash)) {
+      if (["countdown", "checkin", "board"].includes(hash)) {
         switchTab(hash);
       }
     });
