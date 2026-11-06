@@ -36,7 +36,6 @@ li button{background:none;border:0;color:var(--mut);font-size:1.3rem;cursor:poin
 .row{display:flex;gap:8px}.row input{margin:0}
 label{color:var(--mut);font-size:.9rem;display:flex;gap:8px;align-items:center;justify-content:center;margin-top:10px}
 label input{width:auto;margin:0}
-
 [hidden]{display:none!important}.row .btn{margin:0}.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g2 .btn{margin:0;font-size:.9rem;padding:12px 6px}
 .warn{color:#ffd27a;font-size:.9rem}
 </style></head>
@@ -80,7 +79,7 @@ label input{width:auto;margin:0}
 </section>
 
 <section id="v-board">
- <div class="card"><h3 style="margin:0 0 10px;color:var(--gold2)">🏆 Live Leaderboard</h3>
+ <div class="card"><h3 style="margin:0 0 10px;color:var(--gold2)">👑 Host: live guest list</h3>
   <input id="hp" type="password" placeholder="Enter Host PIN (e.g. 1234)" autocomplete="off">
   <button class="btn" id="bdRef">Refresh guest list</button>
   <p class="sub" id="bdSum" style="margin:10px 0 0"></p><ol id="bd"></ol><p class="sub" id="bdMsg"></p></div>
@@ -97,8 +96,8 @@ var qrcode=function(){var e=function(e,t){var n=e,r=QRErrorCorrectionLevel[t],o=
 const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0');
 const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 
-// Paste your deployed Google Apps Script Web App URL below
-const SU0='https://script.google.com/macros/s/AKfycbzW4NSLNasNo3OdZbbSkCABO1h0Qygl3yY1_oCBXzR1BPk5dA0rgYqUybnBwB6aPQt7/exec';
+// Paste your Google Apps Script Web App URL below
+const SU0='https://script.google.com/macros/s/AKfycbwS33q9AA4MJ0meS9n6iIFnJIhLi54ffU1CL8p2Pw19J3u372D12SGHAsMOtXqu3u3GKA/exec';
 const SU=/^https:\/\/script\.google\.com\//.test(SU0)?SU0:'',TB=false,qs=new URLSearchParams(location.search),TEST=TB||qs.has('test');
 const M1=30,OPEN=30,K=TEST?'t_':'';
 if(qs.get('k'))sv('dg_k',qs.get('k'));const KEY=ld('dg_k','');
@@ -120,7 +119,14 @@ async function api(o){
   }finally{clearTimeout(t)}
 }
 
-function paint(){document.querySelectorAll('[data-o]').forEach(e=>e.textContent=tm(START+Number(e.dataset.o)*6e4));if(TEST){$('#sub').textContent='🧪 Test mode · party starts '+tm(START);$('#tc').hidden=false}}
+function paint(){
+  document.querySelectorAll('[data-o]').forEach(e=>e.textContent=tm(START+Number(e.dataset.o)*6e4));
+  if(TEST){
+    $('#sub').textContent='🧪 Test mode · party starts '+tm(START);
+    $('#tc').hidden=false;
+  }
+}
+
 const ids=['countdown','checkin','qr','board'];let cur='countdown';
 function route(){
   const h=(location.hash||'#countdown').slice(1);
