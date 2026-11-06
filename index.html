@@ -1,311 +1,490 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Degave Diwali Countdown & Check-in</title>
-<style>
-:root{color-scheme:dark;--bg:#12062e;--bg2:#3a1166;--card:rgba(255,255,255,.08);--line:rgba(246,196,83,.35);--gold:#f6c453;--gold2:#ffe29a;--txt:#fbefd5;--mut:#c9b9e6;--ok:#6ee7a0;--bad:#ff8a8a;box-sizing:border-box}
-*{box-sizing:inherit}
-body{margin:0;min-height:100vh;background:var(--bg);background-image:radial-gradient(ellipse at 50% -10%,var(--bg2),transparent 65%),radial-gradient(circle at 90% 100%,#5a1a4a,transparent 45%);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}
-main{max-width:520px;margin:0 auto;padding:18px 16px 40px}
-h1{font-family:Georgia,"Times New Roman",serif;font-size:1.7rem;margin:6px 0 2px;background:linear-gradient(#fff1b3,#e2a336);-webkit-background-clip:text;background-clip:text;color:transparent}
-.sub{color:var(--mut);margin:0 0 14px;font-size:.95rem}
-nav{display:flex;gap:6px;margin:0 0 16px}
-nav a{flex:1;padding:10px 4px;border-radius:12px;border:1px solid var(--line);color:var(--txt);text-decoration:none;font-size:.9rem;background:var(--card);cursor:pointer;user-select:none}
-nav a.active{background:var(--gold);color:#2a1200;font-weight:700}
-section{display:none}
-section.active{display:block}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0 0 14px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.box{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:14px;padding:12px 2px}
-.box b{display:block;font-size:2.1rem;font-variant-numeric:tabular-nums;color:var(--gold2)}
-.box small{color:var(--mut);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
-#cmsg{margin:14px 0 0;font-size:1.05rem}
-.rules{text-align:left;margin:0;padding-left:1.1rem;line-height:1.6}
-input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.35);color:var(--txt);font-size:1rem;margin:0 0 10px}
-.btn{display:block;width:100%;padding:14px;border-radius:14px;border:0;background:linear-gradient(#ffd96b,#e39a22);color:#2a1200;font-weight:800;font-size:1.05rem;text-decoration:none;cursor:pointer;margin:8px 0 0}
-.btn.alt{background:transparent;border:1px solid var(--gold);color:var(--gold2);font-weight:600}
-.err{color:var(--bad);min-height:1.2em;margin:6px 0 0}
-.big{font-size:3.6rem;line-height:1}
-ol{list-style:none;margin:0;padding:0;text-align:left}
-li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
-li .n{flex:1}li small{display:block;color:var(--mut)}
-.pos{color:var(--ok)}.neg{color:var(--bad)}.mut{color:var(--mut);justify-content:center}
-[hidden]{display:none!important}
-.warn{color:#ffd27a;font-size:.9rem}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Degave Family Diwali Party</title>
+  <style>
+    :root {
+      --bg-color: #230d47;
+      --card-bg: #351965;
+      --gold-accent: #f5b041;
+      --gold-hover: #e09d31;
+      --text-main: #ffffff;
+      --text-muted: #d8c8ea;
+      --border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #3b1773, var(--bg-color));
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .diya-icon {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 1.85rem;
+      color: var(--gold-accent);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* Navigation Bar */
+    .nav-bar {
+      display: flex;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 4px;
+      border-radius: 12px;
+      gap: 6px;
+      margin-bottom: 24px;
+      width: 100%;
+    }
+
+    .nav-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      color: #fff;
+    }
+
+    .nav-btn.active {
+      background-color: var(--gold-accent);
+      color: #230d47;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* Card Panels */
+    .view-panel {
+      display: none;
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 32px 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    }
+
+    .view-panel.active {
+      display: block;
+    }
+
+    /* Countdown Styling */
+    .timer-grid {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+
+    .time-slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .time-val {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: var(--gold-accent);
+    }
+
+    .time-lbl {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    /* Check-in Form & State */
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--gold-accent);
+    }
+
+    .primary-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--gold-accent);
+      color: #230d47;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s ease;
+    }
+
+    .primary-btn:hover {
+      background: var(--gold-hover);
+    }
+
+    .secondary-btn {
+      background: transparent;
+      border: 1px solid var(--gold-accent);
+      color: var(--gold-accent);
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 16px;
+    }
+
+    .lock-notice {
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .lock-notice strong {
+      color: var(--gold-accent);
+    }
+
+    /* Board / Table Styling */
+    .guest-list {
+      list-style: none;
+      margin-top: 16px;
+      text-align: left;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .guest-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.95rem;
+    }
+
+    .guest-item:last-child {
+      border-bottom: none;
+    }
+
+    .guest-time {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 20px 0;
+    }
+  </style>
 </head>
 <body>
-<main>
-<div class="big">🪔</div>
-<h1>Degave Family Diwali Party</h1>
-<p class="sub" id="sub">Saturday, 7th November 2026 · 6 PM sharp · Punggol</p>
+  <div class="container">
+    <div class="diya-icon">🪔</div>
+    <h1>Degave Family Diwali Party</h1>
+    <p class="subtitle">Saturday, 7th November 2026 • 6 PM sharp • Punggol</p>
 
-<nav>
-  <a id="tab-countdown" class="active" onclick="switchTab('countdown')">⏳ Countdown</a>
-  <a id="tab-checkin" onclick="switchTab('checkin')">✅ Check in</a>
-  <a id="tab-board" onclick="switchTab('board')">🏆 Board</a>
-</nav>
-
-<!-- 1. COUNTDOWN SECTION -->
-<section id="sec-countdown" class="active">
-  <div class="card">
-    <div class="grid">
-      <div class="box"><b id="D">00</b><small>Days</small></div>
-      <div class="box"><b id="Hr">00</b><small>Hours</small></div>
-      <div class="box"><b id="M">00</b><small>Mins</small></div>
-      <div class="box"><b id="S">00</b><small>Secs</small></div>
+    <!-- Navigation Tabs -->
+    <div class="nav-bar">
+      <button class="nav-btn active" id="tabCountdown" onclick="switchTab('countdown')">⏳ Countdown</button>
+      <button class="nav-btn" id="tabCheckin" onclick="switchTab('checkin')">✅ Check in</button>
+      <button class="nav-btn" id="tabBoard" onclick="switchTab('board')">🏆 Board</button>
     </div>
-    <p id="cmsg">Early bird surprise for check-ins between 6:00 PM and 6:30 PM!</p>
+
+    <!-- PANEL 1: COUNTDOWN -->
+    <div id="panelCountdown" class="view-panel active">
+      <h3>Check-in Opens In:</h3>
+      <div class="timer-grid">
+        <div class="time-slot"><span class="time-val" id="days">00</span><span class="time-lbl">Days</span></div>
+        <div class="time-slot"><span class="time-val" id="hours">00</span><span class="time-lbl">Hours</span></div>
+        <div class="time-slot"><span class="time-val" id="minutes">00</span><span class="time-lbl">Minutes</span></div>
+        <div class="time-slot"><span class="time-val" id="seconds">00</span><span class="time-lbl">Seconds</span></div>
+      </div>
+      <p id="countdownMessage" class="lock-notice">Check-in will unlock at 6:00 PM SGT on November 7, 2026.</p>
+    </div>
+
+    <!-- PANEL 2: CHECK-IN -->
+    <div id="panelCheckin" class="view-panel">
+      <!-- State 1: Locked -->
+      <div id="checkinLocked">
+        <div class="diya-icon">🔒</div>
+        <h3>Check-in Is Currently Locked</h3>
+        <p class="lock-notice" style="margin-top: 10px;">
+          Early check-in is not permitted.<br />
+          Please return on <strong>Saturday, 7 November at 6:00 PM SGT</strong>.
+        </p>
+      </div>
+
+      <!-- State 2: Open Form -->
+      <div id="checkinUnlocked" style="display: none;">
+        <div class="diya-icon">🪔</div>
+        <h3 style="margin-bottom: 16px;">Welcome! Please Check In</h3>
+        <form id="checkinForm" onsubmit="handleCheckin(event)">
+          <div class="form-group">
+            <label for="guestName">Your Name / Nickname</label>
+            <input type="text" id="guestName" placeholder="e.g., pnkj" required autocomplete="off" />
+          </div>
+          <button type="submit" class="primary-btn">Complete Check-in</button>
+        </form>
+      </div>
+
+      <!-- State 3: Already Checked In Confirmation -->
+      <div id="checkinSuccess" style="display: none;">
+        <div class="diya-icon">🪔</div>
+        <h3 id="welcomeMsg" style="margin-bottom: 8px;">pnkj, you are checked in!</h3>
+        <p class="subtitle" style="margin-bottom: 16px;">Welcome to the party! 🎶</p>
+        <button class="primary-btn" onclick="switchTab('board')">View Live Leaderboard</button>
+        <button class="secondary-btn" onclick="clearMyCheckin()">Reset / Check in Another</button>
+      </div>
+    </div>
+
+    <!-- PANEL 3: BOARD -->
+    <div id="panelBoard" class="view-panel">
+      <h3>Live Guest Board</h3>
+      <p class="subtitle" style="margin-bottom: 12px;">Guests checked in for the party</p>
+      <ul class="guest-list" id="boardList"></ul>
+      <div id="boardEmpty" class="empty-state">No guests have checked in yet.</div>
+    </div>
   </div>
 
-  <div class="card">
-    <h3 style="margin:0 0 8px;color:var(--gold2)">🎁 Early bird surprise</h3>
-    <ul class="rules" style="list-style:disc">
-      <li style="display:list-item;border:0;padding:0">Check-in opens at <b>6 PM</b>. Scan the QR at the door.</li>
-      <li style="display:list-item;border:0;padding:0">Check in between <b>6:00 PM</b> and <b>6:30 PM</b> to claim your <b class="pos">early bird surprise 🎁</b></li>
-    </ul>
-  </div>
+  <script>
+    // HARD LOCK: 7 November 2026, 18:00:00 SGT (UTC+8)
+    const CHECKIN_OPEN_TIME = new Date("2026-11-07T18:00:00+08:00").getTime();
+    const STORAGE_KEY_CHECKED_USER = "diwali_checked_in_user";
+    const STORAGE_KEY_ALL_GUESTS = "diwali_board_guests";
 
-  <button class="btn" type="button" onclick="switchTab('checkin')">I’m here! Check in</button>
-</section>
+    let currentTab = "countdown";
 
-<!-- 2. CHECK-IN SECTION -->
-<section id="sec-checkin">
-  <div class="card" id="ciForm">
-    <h3 style="margin:0 0 10px;color:var(--gold2)">Welcome! Check in to score</h3>
-    <p class="warn" id="ciHint" style="margin:0 0 10px"></p>
-    <input id="nm" placeholder="Your name" maxlength="30" autocomplete="name">
-    <button class="btn" id="ciBtn" type="button" onclick="handleCheckIn()">Check in now</button>
-    <p class="err" id="ciErr"></p>
-  </div>
-
-  <div class="card" id="ciRes" hidden>
-    <div class="big" id="ciBig">🎉</div>
-    <p id="ciTxt" style="font-size:1.2rem"></p>
-    <p class="warn" id="ciNote"></p>
-    <button class="btn alt" type="button" onclick="switchTab('board')">View Live Leaderboard</button>
-  </div>
-</section>
-
-<!-- 3. BOARD SECTION -->
-<section id="sec-board">
-  <div class="card">
-    <h3 style="margin:0 0 10px;color:var(--gold2)">👑 Host: live guest list</h3>
-    <input id="hp" type="password" placeholder="Host PIN (e.g. 1234)" autocomplete="off">
-    <button class="btn" id="bdRef" type="button" onclick="loadBoard()">Refresh guest list</button>
-    <p class="sub" id="bdSum" style="margin:10px 0 0"></p>
-    <ol id="bd"></ol>
-    <p class="sub" id="bdMsg"></p>
-  </div>
-
-  <div class="card">
-    <h3 style="margin:0 0 10px;color:var(--gold2)">Add a guest manually</h3>
-    <input id="hn" placeholder="Guest name" maxlength="30">
-    <input id="htm" type="time" aria-label="Arrival time (Singapore)">
-    <p class="sub" style="margin:0 0 6px">Leave time empty to use right now.</p>
-    <button class="btn" id="hAdd" type="button" onclick="handleManualAdd()">Add guest</button>
-    <p class="sub" id="hMsg"></p>
-  </div>
-</section>
-</main>
-
-<script>
-// --- YOUR GOOGLE APPS SCRIPT URL ---
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwS33q9AA4MJ0meS9n6iIFnJIhLi54ffU1CL8p2Pw19J3u372D12SGHAsMOtXqu3u3GKA/exec';
-
-// Singapore Party Target: Saturday, Nov 7, 2026, 6:00 PM SGT
-const PARTY_START = Date.parse('2026-11-07T18:00:00+08:00');
-const EARLY_BIRD_END = PARTY_START + (30 * 60 * 1000); // 6:30 PM
-
-// --- RELIABLE TAB SWITCHER ---
-function switchTab(tabId) {
-  ['countdown', 'checkin', 'board'].forEach(id => {
-    const sec = document.getElementById('sec-' + id);
-    const tab = document.getElementById('tab-' + id);
-    if (sec) sec.classList.toggle('active', id === tabId);
-    if (tab) tab.classList.toggle('active', id === tabId);
-  });
-  window.location.hash = '#' + tabId;
-  if (tabId === 'board') loadBoard();
-}
-
-// Listen to browser back/forward and direct hash URLs
-window.addEventListener('hashchange', () => {
-  const hash = window.location.hash.replace('#', '');
-  if (['countdown', 'checkin', 'board'].includes(hash)) {
-    switchTab(hash);
-  }
-});
-
-// --- COUNTDOWN TICKER ---
-function tick() {
-  const now = Date.now();
-  const diff = PARTY_START - now;
-
-  if (diff > 0) {
-    const s = Math.floor(diff / 1000);
-    document.getElementById('D').textContent = String(Math.floor(s / 86400)).padStart(2, '0');
-    document.getElementById('Hr').textContent = String(Math.floor((s % 86400) / 3600)).padStart(2, '0');
-    document.getElementById('M').textContent = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
-    document.getElementById('S').textContent = String(s % 60).padStart(2, '0');
-    document.getElementById('cmsg').textContent = 'Check in between 6:00 PM and 6:30 PM to claim your early bird surprise 🎁';
-  } else {
-    document.getElementById('D').textContent = '00';
-    document.getElementById('Hr').textContent = '00';
-    document.getElementById('M').textContent = '00';
-    document.getElementById('S').textContent = '00';
-    if (now <= EARLY_BIRD_END) {
-      const minsLeft = Math.ceil((EARLY_BIRD_END - now) / 60000);
-      document.getElementById('cmsg').textContent = `Early bird time! ${minsLeft} min left to claim your surprise 🎁`;
-    } else {
-      document.getElementById('cmsg').textContent = 'Welcome! The party is on 🪔';
-    }
-  }
-}
-setInterval(tick, 1000);
-tick();
-
-// --- GUEST CHECK-IN ---
-async function handleCheckIn() {
-  const nameInput = document.getElementById('nm');
-  const err = document.getElementById('ciErr');
-  const name = nameInput.value.trim();
-
-  if (!name) {
-    err.textContent = 'Please enter your name first 🙂';
-    return;
-  }
-  err.textContent = '';
-
-  const btn = document.getElementById('ciBtn');
-  btn.disabled = true;
-  btn.textContent = 'Checking in…';
-
-  try {
-    const res = await fetch(SCRIPT_URL + '?' + new URLSearchParams({
-      action: 'checkin',
-      name: name,
-      start: PARTY_START
-    }));
-    const data = await res.json();
-
-    document.getElementById('ciForm').hidden = true;
-    document.getElementById('ciRes').hidden = false;
-
-    if (data.bird) {
-      document.getElementById('ciBig').textContent = '🎉';
-      document.getElementById('ciTxt').innerHTML = `<b>${name}</b>, you’re an early bird!<br>Show this screen to claim your surprise 🎁`;
-    } else {
-      document.getElementById('ciBig').textContent = '🪔';
-      document.getElementById('ciTxt').innerHTML = `<b>${name}</b>, you are checked in!<br>Welcome to the party! 🎶`;
-    }
-  } catch (e) {
-    document.getElementById('ciForm').hidden = true;
-    document.getElementById('ciRes').hidden = false;
-    document.getElementById('ciBig').textContent = '✅';
-    document.getElementById('ciTxt').innerHTML = `<b>${name}</b>, you are checked in!`;
-    document.getElementById('ciNote').textContent = 'Show this screen to the host.';
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Check in now';
-  }
-}
-
-// --- HOST MANUAL ENTRY ---
-async function handleManualAdd() {
-  const nameInput = document.getElementById('hn');
-  const pinInput = document.getElementById('hp');
-  const timeInput = document.getElementById('htm');
-  const msg = document.getElementById('hMsg');
-
-  const name = nameInput.value.trim();
-  const pin = pinInput.value.trim();
-
-  if (!pin) { msg.textContent = 'Enter the host PIN.'; return; }
-  if (!name) { msg.textContent = 'Enter the guest name.'; return; }
-
-  let targetTs = Date.now();
-  if (timeInput.value) {
-    targetTs = Date.parse('2026-11-07T' + timeInput.value + ':00+08:00');
-  }
-
-  msg.textContent = 'Adding guest…';
-  try {
-    const res = await fetch(SCRIPT_URL + '?' + new URLSearchParams({
-      action: 'manual',
-      name: name,
-      pin: pin,
-      ts: targetTs,
-      start: PARTY_START
-    }));
-    const data = await res.json();
-
-    if (data.ok) {
-      msg.textContent = `Added ${data.name}${data.bird ? ' 🎁 (Early Bird)' : ''} ✅`;
-      nameInput.value = '';
-      timeInput.value = '';
-      loadBoard();
-    } else {
-      msg.textContent = data.err === 'pin' ? 'Wrong host PIN.' : 'Failed to add guest.';
-    }
-  } catch (e) {
-    msg.textContent = 'Network error while adding guest.';
-  }
-}
-
-// --- LIVE LEADERBOARD LOADER ---
-async function loadBoard() {
-  const pin = document.getElementById('hp').value.trim();
-  const msg = document.getElementById('bdMsg');
-  const list = document.getElementById('bd');
-  const sum = document.getElementById('bdSum');
-
-  if (!pin) {
-    msg.textContent = 'Enter the host PIN above to view the guest list.';
-    return;
-  }
-  msg.textContent = 'Loading guest list…';
-
-  try {
-    const res = await fetch(SCRIPT_URL + '?' + new URLSearchParams({
-      action: 'board',
-      pin: pin
-    }));
-    const json = await res.json();
-
-    if (!json.ok) {
-      msg.textContent = 'Wrong host PIN.';
-      return;
+    function isCheckinOpen() {
+      return Date.now() >= CHECKIN_OPEN_TIME;
     }
 
-    msg.textContent = '';
-    const rows = json.rows || [];
-    const birds = rows.filter(r => r.bird).length;
+    function switchTab(target) {
+      currentTab = target;
+      window.location.hash = target;
 
-    sum.textContent = rows.length ? `${rows.length} checked in · ${birds} early bird${birds === 1 ? '' : 's'} 🎁` : '';
+      // Update Tab Styles
+      document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(pnl => pnl.classList.remove("active"));
 
-    if (rows.length === 0) {
-      list.innerHTML = '<li class="mut">No check-ins yet</li>';
-      return;
+      if (target === "countdown") {
+        document.getElementById("tabCountdown").classList.add("active");
+        document.getElementById("panelCountdown").classList.add("active");
+      } else if (target === "checkin") {
+        document.getElementById("tabCheckin").classList.add("active");
+        document.getElementById("panelCheckin").classList.add("active");
+        renderCheckinView();
+      } else if (target === "board") {
+        document.getElementById("tabBoard").classList.add("active");
+        document.getElementById("panelBoard").classList.add("active");
+        renderBoard();
+      }
     }
 
-    list.innerHTML = rows.map(r => {
-      const timeStr = new Date(r.ts).toLocaleTimeString('en-SG', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: '2-digit', hour12: true });
-      return `<li><span>${r.bird ? '🎁' : '✅'}</span><span class="n">${r.name}<small>${timeStr}</small></span></li>`;
-    }).join('');
+    function renderCheckinView() {
+      const lockedDiv = document.getElementById("checkinLocked");
+      const unlockedDiv = document.getElementById("checkinUnlocked");
+      const successDiv = document.getElementById("checkinSuccess");
+      const checkedUser = localStorage.getItem(STORAGE_KEY_CHECKED_USER);
 
-  } catch (e) {
-    msg.textContent = 'Could not reach the database. Try refreshing.';
-  }
-}
+      // Gate 1: Check time lock first
+      if (!isCheckinOpen()) {
+        lockedDiv.style.display = "block";
+        unlockedDiv.style.display = "none";
+        successDiv.style.display = "none";
+        return;
+      }
 
-// On first load, check URL hash (e.g. #checkin)
-const initHash = window.location.hash.replace('#', '');
-if (['countdown', 'checkin', 'board'].includes(initHash)) {
-  switchTab(initHash);
-}
-</script>
+      // Gate 2: If unlocked, check if already checked in
+      lockedDiv.style.display = "none";
+      if (checkedUser) {
+        document.getElementById("welcomeMsg").innerText = `${checkedUser}, you are checked in!`;
+        unlockedDiv.style.display = "none";
+        successDiv.style.display = "block";
+      } else {
+        unlockedDiv.style.display = "block";
+        successDiv.style.display = "none";
+      }
+    }
+
+    function handleCheckin(e) {
+      e.preventDefault();
+
+      // Guard: strictly reject early submission attempts
+      if (!isCheckinOpen()) {
+        alert("Check-in is locked until Saturday, 7 November at 6:00 PM SGT.");
+        return;
+      }
+
+      const input = document.getElementById("guestName");
+      const name = input.value.trim();
+      if (!name) return;
+
+      const timestamp = new Date().toLocaleTimeString("en-SG", {
+        timeZone: "Asia/Singapore",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      // Save user session locally
+      localStorage.setItem(STORAGE_KEY_CHECKED_USER, name);
+
+      // Save to board records (simulate backend storage via localStorage)
+      let guests = [];
+      try {
+        guests = JSON.parse(localStorage.getItem(STORAGE_KEY_ALL_GUESTS) || "[]");
+      } catch (err) {
+        guests = [];
+      }
+
+      guests.unshift({ name, time: timestamp });
+      localStorage.setItem(STORAGE_KEY_ALL_GUESTS, JSON.stringify(guests));
+
+      input.value = "";
+      renderCheckinView();
+    }
+
+    function clearMyCheckin() {
+      localStorage.removeItem(STORAGE_KEY_CHECKED_USER);
+      renderCheckinView();
+    }
+
+    function renderBoard() {
+      const listEl = document.getElementById("boardList");
+      const emptyEl = document.getElementById("boardEmpty");
+      let guests = [];
+
+      try {
+        guests = JSON.parse(localStorage.getItem(STORAGE_KEY_ALL_GUESTS) || "[]");
+      } catch (err) {
+        guests = [];
+      }
+
+      listEl.innerHTML = "";
+      if (guests.length === 0) {
+        emptyEl.style.display = "block";
+      } else {
+        emptyEl.style.display = "none";
+        guests.forEach((g, index) => {
+          const li = document.createElement("li");
+          li.className = "guest-item";
+          li.innerHTML = `
+            <span><strong>#${index + 1}</strong> ${g.name}</span>
+            <span class="guest-time">${g.time}</span>
+          `;
+          listEl.appendChild(li);
+        });
+      }
+    }
+
+    function updateCountdown() {
+      const now = Date.now();
+      const diff = CHECKIN_OPEN_TIME - now;
+
+      if (diff <= 0) {
+        document.getElementById("days").innerText = "00";
+        document.getElementById("hours").innerText = "00";
+        document.getElementById("minutes").innerText = "00";
+        document.getElementById("seconds").innerText = "00";
+        document.getElementById("countdownMessage").innerText = "Check-in is now OPEN!";
+
+        // If currently viewing check-in panel, refresh its display
+        if (currentTab === "checkin") {
+          renderCheckinView();
+        }
+        return;
+      }
+
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((diff / (1000 * 60)) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("days").innerText = String(d).padStart(2, "0");
+      document.getElementById("hours").innerText = String(h).padStart(2, "0");
+      document.getElementById("minutes").innerText = String(m).padStart(2, "0");
+      document.getElementById("seconds").innerText = String(s).padStart(2, "0");
+    }
+
+    // Sync hash navigation on load
+    window.addEventListener("DOMContentLoaded", () => {
+      const hash = window.location.hash.replace("#", "");
+      if (hash === "checkin" || hash === "board" || hash === "countdown") {
+        switchTab(hash);
+      }
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    });
+
+    window.addEventListener("hashchange", () => {
+      const hash = window.location.hash.replace("#", "");
+      if (["checkin", "board", "countdown"].includes(hash)) {
+        switchTab(hash);
+      }
+    });
+  </script>
 </body>
 </html>
